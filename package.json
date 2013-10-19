@@ -1,0 +1,41 @@
+{
+    "author": {
+        "name": "Golyshev Dmitrii",
+        "email": "golyshev.dmitry@yandex.ru"
+    },
+    "bugs": {
+        "url": "https://github.com/fistlabs/loggin/issues"
+    },
+    "contributors": [
+        "Golyshev Dmitrii <golyshev.dmitry@yandex.ru>"
+    ],
+    "dependencies": {
+        "fast-strftime": "1.1.1",
+        "inherit": "2.2.2",
+        "has-color": "0.1.7"
+    },
+    "description": "Simple extensible logger",
+    "devDependencies": {
+        "nodeunit": "0.9.0",
+        "istanbul": "0.3.0",
+        "glob": "4.0.4",
+        "eslint": "0.7.4",
+        "jscs": "1.5.8"
+    },
+    "license": "MIT",
+    "main": "logger",
+    "name": "loggin",
+    "repository": {
+        "type": "git",
+        "url": "git://github.com/fistlabs/loggin.git"
+    },
+    "scripts": {
+        "jscs": "jscs .",
+        "eslint": "eslint .",
+        "lint": "npm run jscs && npm run eslint",
+        "unit": "node test/runner",
+        "test": "npm run lint && npm run unit",
+        "cover": "istanbul cover test/runner"
+    },
+    "version": "0.0.1"
+}

@@ -1,0 +1,9 @@
+'use strict';
+
+var glob = require('glob');
+var tests = glob.sync('test/*.js');
+var Nodeunit = require('nodeunit');
+
+Nodeunit.reporters.default.run(tests, null, function (error) {
+    process.exit( +!!error );
+});
