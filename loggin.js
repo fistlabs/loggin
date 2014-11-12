@@ -17,27 +17,27 @@ config.configure({
             Class: resolve('./core/logging'),
             levels: {
                 INTERNAL: -Infinity,
-                TEMPORARY: 0,
-                DEBUG: 20000,
+                DEBUG: 0,
+                NOTE: 20000,
                 INFO: 40000,
                 LOG: 55000,
                 WARNING: 65000,
                 ERROR: 70000,
                 FATAL: Infinity
             },
-            level: 'DEBUG',
+            level: 'NOTE',
             handlers: ['console'],
             records: {
                 internal: {
                     level: 'INTERNAL',
                     Class: resolve('./core/record/sprintf-record')
                 },
-                temp: {
-                    level: 'TEMPORARY',
-                    Class: resolve('./core/record/sprintf-record')
-                },
                 debug: {
                     level: 'DEBUG',
+                    Class: resolve('./core/record/sprintf-record')
+                },
+                note: {
+                    level: 'NOTE',
                     Class: resolve('./core/record/sprintf-record')
                 },
                 info: {
@@ -92,8 +92,8 @@ config.configure({
                 strf: '%(asctime)s %(process)s %(name)s %(level)s - %(message)s\n',
                 colors: {
                     INTERNAL: 'white',
-                    TEMPORARY: 'fuchsia',
-                    DEBUG: 'blue',
+                    DEBUG: 'fuchsia',
+                    NOTE: 'blue',
                     INFO: 'aqua',
                     LOG: 'lime',
                     WARNING: 'yellow',

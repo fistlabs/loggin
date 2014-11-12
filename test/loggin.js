@@ -34,7 +34,7 @@ describe('loggin', function () {
     });
 
     var recorders = ['internal', 'debug',
-        'info', 'log', 'warn', 'error', 'fatal', 'temp'];
+        'info', 'log', 'warn', 'error', 'fatal', 'note'];
     _.forEach(recorders, function (name) {
         it('Should have "' + name + '" recorder', function () {
             assert.strictEqual(typeof loggin[name], 'function');
@@ -52,11 +52,11 @@ describe('loggin', function () {
             return this._level;
         };
         assert.strictEqual(typeof loggin.setLevel, 'function');
-        assert.strictEqual(loggin.loggings.global.getLevel(), 'DEBUG');
+        assert.strictEqual(loggin.loggings.global.getLevel(), 'NOTE');
         loggin.setLevel('INTERNAL');
         assert.strictEqual(loggin.loggings.global.getLevel(), 'INTERNAL');
-        loggin.setLevel('DEBUG');
-        assert.strictEqual(loggin.loggings.global.getLevel(), 'DEBUG');
+        loggin.setLevel('NOTE');
+        assert.strictEqual(loggin.loggings.global.getLevel(), 'NOTE');
     });
 
 });
