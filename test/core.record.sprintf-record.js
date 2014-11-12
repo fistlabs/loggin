@@ -9,7 +9,7 @@ describe('core/record/sprintf-record', function () {
 
     describe('record.getVars()', function () {
         it('Should return expected object', function () {
-            var record = new SprintfRecord(function () {}, 'foo', 'LOG', ['Hi %s!', 'all']);
+            var record = new SprintfRecord('foo', 'LOG', ['Hi %s!', 'all']);
             assert.deepEqual(record.getVars(), {
                 name: 'foo',
                 level: 'LOG',

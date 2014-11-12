@@ -199,7 +199,7 @@ describe('core/logging', function () {
             this.spy.push(vars);
         };
 
-        function SpyRecord(a, b, c, args) {
+        function SpyRecord(a, b, args) {
             this.args = [].slice.call(args, 0);
         }
 
@@ -213,8 +213,8 @@ describe('core/logging', function () {
             logging.addLevel('BAR', 42);
             logging.setLevel('BAR');
             logging.addHandler(new SpyHandler(new SpyLayout()));
-            assert.ok(!logging.doRecord(SpyRecord, function () {}, 'FOO', 'foo', []));
-            assert.ok(logging.doRecord(SpyRecord, function () {}, 'BAR', 'foo', []));
+            assert.ok(!logging.doRecord(SpyRecord, 'FOO', 'foo', []));
+            assert.ok(logging.doRecord(SpyRecord, 'BAR', 'foo', []));
         });
 
         it('Should handle record if level match only', function () {

@@ -17,11 +17,12 @@ config.configure({
             Class: resolve('./core/logging'),
             levels: {
                 INTERNAL: -Infinity,
-                DEBUG: 0,
-                INFO: 20000,
-                LOG: 35000,
-                WARNING: 45000,
-                ERROR: 50000,
+                TEMPORARY: 0,
+                DEBUG: 20000,
+                INFO: 40000,
+                LOG: 55000,
+                WARNING: 65000,
+                ERROR: 70000,
                 FATAL: Infinity
             },
             level: 'DEBUG',
@@ -29,6 +30,10 @@ config.configure({
             records: {
                 internal: {
                     level: 'INTERNAL',
+                    Class: resolve('./core/record/sprintf-record')
+                },
+                temp: {
+                    level: 'TEMPORARY',
                     Class: resolve('./core/record/sprintf-record')
                 },
                 debug: {
@@ -54,14 +59,6 @@ config.configure({
                 fatal: {
                     level: 'FATAL',
                     Class: resolve('./core/record/sprintf-record')
-                },
-                trace: {
-                    level: 'DEBUG',
-                    Class: resolve('./core/record/trace-record')
-                },
-                dir: {
-                    level: 'DEBUG',
-                    Class: resolve('./core/record/inspect-record')
                 }
             }
         }
@@ -94,7 +91,8 @@ config.configure({
                 strftime: '[%d/%b/%Y:%H:%M:%S %z]',
                 strf: '%(asctime)s %(process)s:%(name)s %(level)s - %(message)s\n',
                 colors: {
-                    INTERNAL: 'fuchsia',
+                    INTERNAL: 'white',
+                    TEMPORARY: 'fuchsia',
                     DEBUG: 'blue',
                     INFO: 'aqua',
                     LOG: 'lime',
@@ -109,10 +107,6 @@ config.configure({
 
 var logger = config.loggings.global.getLogger();
 
-_.forOwn(config.loggings.global.Logger.prototype, function (val, k) {
-    config[k] = val.bind(logger);
-});
-
 config.getLogger = function (name) {
     return this.loggings.global.getLogger(name);
 };
@@ -120,5 +114,12 @@ config.getLogger = function (name) {
 config.setLevel = function (level) {
     return this.loggings.global.setLevel(level);
 };
+
+// config.setLevel('INTERNAL');
+
+_.forOwn(config.loggings.global.Logger.prototype, function (val, k) {
+    config[k] = val.bind(logger);
+    // config[k]('Test');
+});
 
 module.exports = config;
