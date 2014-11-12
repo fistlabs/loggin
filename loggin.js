@@ -59,14 +59,6 @@ config.configure({
                 fatal: {
                     level: 'FATAL',
                     Class: resolve('./core/record/sprintf-record')
-                },
-                trace: {
-                    level: 'DEBUG',
-                    Class: resolve('./core/record/trace-record')
-                },
-                dir: {
-                    level: 'DEBUG',
-                    Class: resolve('./core/record/inspect-record')
                 }
             }
         }

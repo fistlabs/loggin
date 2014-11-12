@@ -34,7 +34,7 @@ describe('loggin', function () {
     });
 
     var recorders = ['internal', 'debug',
-        'info', 'log', 'warn', 'error', 'fatal', 'dir', 'trace', 'temp'];
+        'info', 'log', 'warn', 'error', 'fatal', 'temp'];
     _.forEach(recorders, function (name) {
         it('Should have "' + name + '" recorder', function () {
             assert.strictEqual(typeof loggin[name], 'function');
