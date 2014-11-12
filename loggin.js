@@ -23,7 +23,8 @@ config.configure({
                 LOG: 55000,
                 WARNING: 65000,
                 ERROR: 70000,
-                FATAL: Infinity
+                FATAL: Number.MAX_VALUE,
+                SILENT: Infinity
             },
             level: 'NOTE',
             handlers: ['console'],
