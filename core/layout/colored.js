@@ -80,4 +80,8 @@ Colored.stylize = function (style, str) {
     return str;
 };
 
+// Object.keys(styles).forEach(function (k) {
+//     console.log('%s %s', k, Colored.stylize(k, 'TEST'));
+// });
+
 module.exports = Colored;
