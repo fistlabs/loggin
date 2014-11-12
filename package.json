@@ -28,11 +28,11 @@
         "gulp-istanbul": "0.3.1"
     },
     "license": "MIT",
-    "main": "logger",
+    "main": "loggin",
     "name": "loggin",
     "repository": {
         "type": "git",
         "url": "git://github.com/fistlabs/loggin.git"
     },
-    "version": "1.0.0-0"
+    "version": "1.0.0-1"
 }
