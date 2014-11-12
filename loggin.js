@@ -82,7 +82,7 @@ config.configure({
             Class: resolve('./core/layout/layout'),
             params: {
                 strftime: '[%d/%b/%Y:%H:%M:%S %z]',
-                strf: '%(asctime)s %(process)s:%(name)s %(level)s - %(message)s\n'
+                strf: '%(asctime)s %(process)s %(name)s %(level)s - %(message)s\n'
             }
         },
         colored: {
