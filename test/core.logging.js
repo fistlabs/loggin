@@ -238,4 +238,15 @@ describe('core/logging', function () {
             ]);
         });
     });
+
+    describe('logging.Logger.prototype.bind', function () {
+        it('Should bind context to new logger', function () {
+            var logging = new Logging();
+            var logger = logging.getLogger('foo');
+            assert.strictEqual(logger.name, 'foo');
+            var logger2 = logger.bind('bar');
+            assert.strictEqual(logger2.name, 'foo:bar');
+            assert.notStrictEqual(logger, logger2);
+        });
+    });
 });

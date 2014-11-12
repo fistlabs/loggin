@@ -20,6 +20,12 @@ function Logging() {
         this.name = name;
     }
 
+    Logger.prototype = {
+        bind: function (name) {
+            return new Logger(this.name + ':' + name);
+        }
+    };
+
     /**
      * @public
      * @memberOf {Logging}
