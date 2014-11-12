@@ -33,7 +33,7 @@
         "valid-jsdoc": 0,
         "valid-typeof": 2,
 
-        "block-scoped-var": 2,
+        "block-scoped-var": 0,
         "complexity": [2, 6],
         "consistent-return": 2,
         "curly": 2,
@@ -52,7 +52,7 @@
         "no-fallthrough": 2,
         "no-floating-decimal": 2,
         "no-implied-eval": 2,
-        "no-labels": 2,
+        "no-labels": 0,
         "no-iterator": 2,
         "no-lone-blocks": 2,
         "no-loop-func": 2,
@@ -75,6 +75,7 @@
         "radix": 2,
         "wrap-iife": 2,
         "yoda": 0,
+        "no-yoda": 0,
 
         "no-global-strict": 0,
         "no-extra-strict": 2,
@@ -132,7 +133,7 @@
 
         "max-depth": [2, 4],
         "max-len": 0,
-        "max-params": [2, 4],
+        "max-params": [2, 5],
         "max-statements": 0,
         "no-bitwise": 0,
         "no-plusplus": 2
