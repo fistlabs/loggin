@@ -89,7 +89,7 @@ config.configure({
             Class: resolve('./core/layout/colored'),
             params: {
                 strftime: '[%d/%b/%Y:%H:%M:%S %z]',
-                strf: '%(asctime)s %(process)s:%(name)s %(level)s - %(message)s\n',
+                strf: '%(asctime)s %(process)s %(name)s %(level)s - %(message)s\n',
                 colors: {
                     INTERNAL: 'white',
                     TEMPORARY: 'fuchsia',
@@ -105,7 +105,7 @@ config.configure({
     }
 });
 
-var logger = config.loggings.global.getLogger();
+var logger = config.loggings.global.getLogger('default');
 
 config.getLogger = function (name) {
     return this.loggings.global.getLogger(name);
