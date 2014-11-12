@@ -141,7 +141,7 @@ Logging.prototype.addRecord = function (name, level, Record) {
     assert.isFunction(Record);
 
     this.Logger.prototype[name] = function () {
-        return self._record(Record, self.Logger.prototype[name], level, this.name, arguments);
+        return self._record(Record, level, this.name, arguments);
     };
 
     return this;
@@ -164,14 +164,13 @@ Logging.prototype.getLogger = function (name) {
  * @method
  *
  * @param {Function} Record
- * @param {Function} caller
  * @param {String} level
  * @param {String} name
  * @param {Array|Arguments} args
  *
  * @returns {Boolean}
  * */
-Logging.prototype._record = function (Record, caller, level, name, args) {
+Logging.prototype._record = function (Record, level, name, args) {
     var i;
     var l;
     var handlers;
@@ -182,7 +181,7 @@ Logging.prototype._record = function (Record, caller, level, name, args) {
         return false;
     }
 
-    record = new Record(caller, name, level, args);
+    record = new Record(name, level, args);
     handlers = this._handlers;
 
     for (i = 0, l = handlers.length; i < l; i += 1) {

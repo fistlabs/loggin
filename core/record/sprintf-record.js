@@ -5,12 +5,11 @@ var format = require('../util/format');
 /**
  * @class SprintfRecord
  *
- * @param {Function} caller
  * @param {String} name
  * @param {String} level
  * @param {Array|Arguments} args
  * */
-function SprintfRecord(caller, name, level, args) {
+function SprintfRecord(name, level, args) {
 
     /**
      * @public
@@ -19,14 +18,6 @@ function SprintfRecord(caller, name, level, args) {
      * @type {String}
      * */
     this.asctime = new Date();
-
-    /**
-     * @public
-     * @memberOf {SprintfRecord}
-     * @property
-     * @type {Function}
-     * */
-    this.caller = caller;
 
     /**
      * @public
