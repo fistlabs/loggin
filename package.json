@@ -34,13 +34,5 @@
         "type": "git",
         "url": "git://github.com/fistlabs/loggin.git"
     },
-    "scripts": {
-        "jscs": "jscs .",
-        "eslint": "eslint .",
-        "lint": "npm run jscs && npm run eslint",
-        "unit": "node test/runner",
-        "test": "npm run lint && npm run unit",
-        "cover": "istanbul cover test/runner"
-    },
     "version": "0.0.1"
 }
