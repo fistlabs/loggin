@@ -1,126 +1,79 @@
 'use strict';
 
+var NOTE = 'NOTE';
+
+var LEVELS = [
+    'INTERNAL',
+    'DEBUG',
+    NOTE,
+    'INFO',
+    'LOG',
+    'WARNING',
+    'ERROR',
+    'FATAL',
+    'SILENT'
+];
+
 var Config = require('./core/config');
+var Logging = require('./core/logging');
 
 var _ = require('lodash-node');
 var config = new Config();
-var hasColor = require('has-color');
-var path = require('path');
+var defaultConfig = require('./default-config');
 
-function resolve(s) {
-    return path.join(__dirname, s);
+function init(logLevels, defaultLevel) {
+    var storage = Logging.getStorage();
+
+    storage.levels = {};
+
+    _.forEachRight(logLevels, function (level, i, levels) {
+        var last = levels.length - 1;
+        var c;
+        var m;
+        var y;
+
+        level = levels[last - i];
+
+        if (i === 0) {
+            y = Infinity;
+        } else if (i === last) {
+            y = -Infinity;
+        } else {
+            i -= 1;
+            last -= 2;
+            c = (Math.pow(5, 0.5) + 1) / 2;
+            m = last * Math.pow(c, last);
+            y = -(i * Math.pow(c, i) - m) / m * 2 - 1;
+        }
+
+        storage.levels[level] = y * Number.MAX_VALUE;
+    });
+
+    if (!_.has(storage.levels, storage.logLevel)) {
+        Logging.setLevel(defaultLevel);
+    }
 }
 
-config.configure({
-    loggings: {
-        global: {
-            Class: resolve('./core/logging'),
-            levels: {
-                INTERNAL: -Infinity,
-                DEBUG: 0,
-                NOTE: 20000,
-                INFO: 40000,
-                LOG: 55000,
-                WARNING: 65000,
-                ERROR: 70000,
-                FATAL: Number.MAX_VALUE,
-                SILENT: Infinity
-            },
-            level: 'NOTE',
-            handlers: ['console'],
-            records: {
-                internal: {
-                    level: 'INTERNAL',
-                    Class: resolve('./core/record/sprintf-record')
-                },
-                debug: {
-                    level: 'DEBUG',
-                    Class: resolve('./core/record/sprintf-record')
-                },
-                note: {
-                    level: 'NOTE',
-                    Class: resolve('./core/record/sprintf-record')
-                },
-                info: {
-                    level: 'INFO',
-                    Class: resolve('./core/record/sprintf-record')
-                },
-                log: {
-                    level: 'LOG',
-                    Class: resolve('./core/record/sprintf-record')
-                },
-                warn: {
-                    level: 'WARNING',
-                    Class: resolve('./core/record/sprintf-record')
-                },
-                error: {
-                    level: 'ERROR',
-                    Class: resolve('./core/record/sprintf-record')
-                },
-                fatal: {
-                    level: 'FATAL',
-                    Class: resolve('./core/record/sprintf-record')
-                }
-            }
-        }
-    },
-    handlers: {
-        console: {
-            Class: resolve('./core/handler/stream-handler'),
-            layout: ['pretty', 'colored'][Number(hasColor)],
-            params: {
-                stream: process.stdout,
-                streams: {
-                    WARNING: process.stderr,
-                    ERROR: process.stderr,
-                    FATAL: process.stderr
-                }
-            }
-        }
-    },
-    layouts: {
-        pretty: {
-            Class: resolve('./core/layout/layout'),
-            params: {
-                strftime: '[%d/%b/%Y:%H:%M:%S %z]',
-                strf: '%(asctime)s %(process)s %(name)s %(level)s - %(message)s\n'
-            }
-        },
-        colored: {
-            Class: resolve('./core/layout/colored'),
-            params: {
-                strftime: '[%d/%b/%Y:%H:%M:%S %z]',
-                strf: '%(asctime)s %(process)s %(name)s %(level)s - %(message)s\n',
-                colors: {
-                    INTERNAL: 'white',
-                    DEBUG: 'fuchsia',
-                    NOTE: 'blue',
-                    INFO: 'aqua',
-                    LOG: 'lime',
-                    WARNING: 'yellow',
-                    ERROR: 'red',
-                    FATAL: 'maroon'
-                }
-            }
-        }
-    }
-});
+function bindLogger(name, target) {
+    var logger = config.getLogger(name);
 
-var logger = config.loggings.global.getLogger('default');
+    _.forOwn(config.loggings.global.Logger.prototype, function (val, k) {
+        target[k] = val.bind(logger);
+    });
+}
 
 config.getLogger = function (name) {
     return this.loggings.global.getLogger(name);
 };
 
 config.setLevel = function (level) {
-    return this.loggings.global.setLevel(level);
+    return Logging.setLevel(level);
 };
 
-// config.setLevel('INTERNAL');
+init(LEVELS, NOTE);
 
-_.forOwn(config.loggings.global.Logger.prototype, function (val, k) {
-    config[k] = val.bind(logger);
-    // config[k]('Test');
-});
+config.conf(defaultConfig);
+
+bindLogger('default', config);
 
 module.exports = config;

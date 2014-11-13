@@ -19,12 +19,12 @@ describe('core/logging', function () {
         return this._handlers;
     };
 
-    Logging.prototype.getLevel = function () {
-        return this._level;
+    Logging.getLevel = function () {
+        return StdLogging.getStorage().logLevel;
     };
 
-    Logging.prototype.getLevels = function () {
-        return this._levels;
+    Logging.getLevels = function () {
+        return StdLogging.getStorage().levels;
     };
 
     Logging.prototype.doRecord = function () {
@@ -98,70 +98,43 @@ describe('core/logging', function () {
         });
     });
 
-    describe('logging.addLevel', function () {
-        it('Should be a valid log level', function () {
-            var logging = new Logging();
-            assert.throws(function () {
-                logging.addLevel();
-            });
-            assert.throws(function () {
-                logging.addLevel('FOO', {});
-            });
-            assert.throws(function () {
-                logging.addLevel({}, 42);
-            });
-        });
-        it('Should add log level', function () {
-            var logging = new Logging();
-            logging.addLevel('FOO', 42);
-            assert.deepEqual(logging.getLevels(), {
-                FOO: 42
-            });
-        });
-    });
-
-    describe('logging.setLevel', function () {
+    describe('Loggin.setLevel', function () {
         it('Should be an existing log level', function () {
-            var logging = new Logging();
             assert.throws(function () {
-                logging.setLevel('FOO');
+                Logging.setLevel('FOO');
             });
         });
 
         it('Should set log level', function () {
-            var logging = new Logging();
-            logging.addLevel('FOO', 42);
-            logging.setLevel('FOO');
-            assert.strictEqual(logging.getLevel(), 'FOO');
+            StdLogging.setLevel('INFO');
+            assert.strictEqual(Logging.getLevel(), 'INFO');
         });
     });
 
     describe('logging.addRecord', function () {
         it('Should accept only valid params', function () {
             var logging = new Logging();
-            logging.addLevel('FOO', 42);
             function Record() {}
             assert.throws(function () {
-                logging.addRecord(42, 'FOO', Record);
+                logging.addRecord(42, 'INFO', Record);
             });
             assert.throws(function () {
                 logging.addRecord('log', 42, Record);
             });
             assert.throws(function () {
-                logging.addRecord('log', 'BAR', Record);
+                logging.addRecord('log', 'FOO', Record);
             });
             assert.throws(function () {
-                logging.addRecord('log', 'FOO', 42);
+                logging.addRecord('log', 'INFO', 42);
             });
             assert.doesNotThrow(function () {
-                logging.addRecord('log', 'FOO', Record);
+                logging.addRecord('log', 'INFO', Record);
             });
         });
 
         it('Should add recorder', function () {
             var logging = new Logging();
-            logging.addLevel('FOO', 42);
-            logging.addRecord('log', 'FOO', function () {});
+            logging.addRecord('log', 'INFO', function () {});
             assert.strictEqual(typeof logging.Logger.prototype.log, 'function');
         });
     });
@@ -209,23 +182,19 @@ describe('core/logging', function () {
 
         it('Should return level match result', function () {
             var logging = new Logging();
-            logging.addLevel('FOO', 0);
-            logging.addLevel('BAR', 42);
-            logging.setLevel('BAR');
+            StdLogging.setLevel('INFO');
             logging.addHandler(new SpyHandler(new SpyLayout()));
-            assert.ok(!logging.doRecord(SpyRecord, 'FOO', 'foo', []));
-            assert.ok(logging.doRecord(SpyRecord, 'BAR', 'foo', []));
+            assert.ok(!logging.doRecord(SpyRecord, 'DEBUG', 'foo', []));
+            assert.ok(logging.doRecord(SpyRecord, 'INFO', 'foo', []));
         });
 
         it('Should handle record if level match only', function () {
             var logging = new Logging();
-            logging.addLevel('FOO', 0);
-            logging.addLevel('BAR', 42);
-            logging.setLevel('BAR');
+            StdLogging.setLevel('INFO');
             var handler = new SpyHandler(new SpyLayout());
             logging.addHandler(handler);
-            logging.addRecord('foo', 'FOO', SpyRecord);
-            logging.addRecord('bar', 'BAR', SpyRecord);
+            logging.addRecord('foo', 'DEBUG', SpyRecord);
+            logging.addRecord('bar', 'INFO', SpyRecord);
             var logger = logging.getLogger('xyz');
             assert.ok(!logger.foo(1));
             assert.ok(logger.bar(2));

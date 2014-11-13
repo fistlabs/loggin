@@ -98,7 +98,7 @@ Config.prototype.addLoggings = function (loggings) {
  *
  * @returns {Config}
  * */
-Config.prototype.configure = function (configs) {
+Config.prototype.conf = function (configs) {
     _.forOwn(configs, function (config, sect) {
         this.configs[sect] = _.extend(this.configs[sect] || {}, config);
     }, this);
@@ -191,12 +191,6 @@ Config.prototype._createLoggings = function (loggings) {
         _.forEach(config.handlers, function (handler) {
             return logging.addHandler(this.handlers[handler]);
         }, this);
-
-        _.forOwn(config.levels, function (weight, levelName) {
-            logging.addLevel(levelName, weight);
-        });
-
-        logging.setLevel(config.level);
 
         _.forOwn(config.records, function (opts, name) {
             var Record;
