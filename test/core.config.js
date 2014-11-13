@@ -54,10 +54,6 @@ describe('core/config', function () {
     var loggingClassPath = './logging';
     var loggingClassDecl = {
         Class: Logging,
-        level: 'DEBUG',
-        levels: {
-            DEBUG: 1
-        },
         handlers: ['handler'],
         records: {
             debug: {
@@ -68,10 +64,6 @@ describe('core/config', function () {
     };
     var loggingPathDecl = {
         Class: loggingClassPath,
-        level: 'DEBUG',
-        levels: {
-            DEBUG: 1
-        },
         handlers: ['handler'],
         records: {
             debug: {
@@ -177,10 +169,6 @@ describe('core/config', function () {
             assert.ok(config.loggings.bar instanceof StdLogging);
             assert.strictEqual(typeof config.loggings.foo.Logger.prototype.debug, 'function');
             assert.strictEqual(typeof config.loggings.bar.Logger.prototype.debug, 'function');
-            assert.strictEqual(config.loggings.bar.getLevel(), 'DEBUG');
-            assert.deepEqual(config.loggings.bar.getLevels(), {
-                DEBUG: 1
-            });
         });
         it('Should add loggings by path+params', function () {
             var config = new Config();
@@ -198,11 +186,11 @@ describe('core/config', function () {
         });
     });
 
-    describe('config.configure', function () {
+    describe('config.conf', function () {
         it('Should merge configs', function () {
             function write() {}
             var config = new Config();
-            config.configure({
+            config.conf({
                 loggings: {
                     foo: {
                         Class: Logging,
@@ -267,7 +255,7 @@ describe('core/config', function () {
             assert.ok(config.loggings.foo instanceof Logging);
             assert.ok(config.handlers.foo instanceof Handler);
             assert.ok(config.layouts.foo instanceof Layout);
-            config.configure({
+            config.conf({
                 layouts: {
                     bar: {
                         Class: Layout,

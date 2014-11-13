@@ -13,6 +13,10 @@ describe('loggin', function () {
     var Layout = require('../core/layout/layout');
     var Colored = require('../core/layout/colored');
 
+    function getLevel() {
+        return Logging.getStorage().logLevel;
+    }
+
     it('Should be an instance on Config', function () {
         assert.ok(loggin instanceof Config);
     });
@@ -48,15 +52,21 @@ describe('loggin', function () {
     });
 
     it('Should have "setLevel" method', function () {
-        loggin.loggings.global.getLevel = function () {
-            return this._level;
-        };
         assert.strictEqual(typeof loggin.setLevel, 'function');
-        assert.strictEqual(loggin.loggings.global.getLevel(), 'NOTE');
-        loggin.setLevel('INTERNAL');
-        assert.strictEqual(loggin.loggings.global.getLevel(), 'INTERNAL');
+
         loggin.setLevel('NOTE');
-        assert.strictEqual(loggin.loggings.global.getLevel(), 'NOTE');
+        assert.strictEqual(getLevel(), 'NOTE');
+        loggin.setLevel('INTERNAL');
+        assert.strictEqual(getLevel(), 'INTERNAL');
+        loggin.setLevel('NOTE');
+        assert.strictEqual(getLevel(), 'NOTE');
+    });
+
+    it('Should not set DEFAULT_LOG_LEVEL if set', function () {
+        delete require.cache[require.resolve('../loggin')];
+        Logging.setLevel('SILENT');
+        loggin = require('../loggin');
+        assert.strictEqual(getLevel(), 'SILENT');
     });
 
 });

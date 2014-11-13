@@ -1,9 +1,13 @@
 'use strict';
 
 var Handler = /** @type Handler */ require('./handler/stream-handler');
+var Semver = require('semver');
 
 var _ = require('lodash-node');
 var assert = require('chai').assert;
+var getStorage = require('./util/global-storage');
+var packageJson = require('../package');
+var version = new Semver(packageJson.version);
 
 /**
  * @class Logging
@@ -38,14 +42,6 @@ function Logging() {
      * @protected
      * @memberOf {Logging}
      * @property
-     * @type {String}
-     * */
-    this._level = void 0;
-
-    /**
-     * @protected
-     * @memberOf {Logging}
-     * @property
      * @type {Array}
      * */
     this._handlers = [];
@@ -56,7 +52,7 @@ function Logging() {
      * @property
      * @type {Object}
      * */
-    this._levels = {};
+    this._storage = Logging.getStorage();
 }
 
 /**
@@ -103,36 +99,6 @@ Logging.prototype.setHandlers = function (handlers) {
  * @memberOf {Logging}
  * @method
  *
- * @returns {Logging}
- * */
-Logging.prototype.setLevel = function (level) {
-    assert.ok(_.has(this._levels, level));
-    this._level = level;
-    return this;
-};
-
-/**
- * @public
- * @memberOf {Logging}
- * @method
- *
- * @param {String} levelName
- * @param {Number} weight
- *
- * @returns {Logging}
- * */
-Logging.prototype.addLevel = function (levelName, weight) {
-    assert.isString(levelName);
-    assert.isNumber(weight);
-    this._levels[levelName] = weight;
-    return this;
-};
-
-/**
- * @public
- * @memberOf {Logging}
- * @method
- *
  * @param {String} name
  * @param {String} level
  * @param {Function} Record
@@ -143,7 +109,7 @@ Logging.prototype.addRecord = function (name, level, Record) {
     var self = this;
     assert.isString(name);
     assert.isString(level);
-    assert.ok(_.has(this._levels, level));
+    assert.ok(_.has(this._storage.levels, level));
     assert.isFunction(Record);
 
     this.Logger.prototype[name] = function () {
@@ -180,10 +146,11 @@ Logging.prototype._record = function (Record, level, name, args) {
     var i;
     var l;
     var handlers;
-    var levels = this._levels;
+    var levels = this._storage.levels;
+    var logLevel = this._storage.logLevel;
     var record;
 
-    if (levels[level] < levels[this._level]) {
+    if (levels[level] < levels[logLevel]) {
         return false;
     }
 
@@ -195,6 +162,38 @@ Logging.prototype._record = function (Record, level, name, args) {
     }
 
     return true;
+};
+
+/**
+ * @public
+ * @static
+ * @memberOf {Logging}
+ * @method
+ *
+ * @returns {Object}
+ * */
+Logging.getStorage = function () {
+    var storage = getStorage(packageJson.name, version.major);
+    if (!_.isObject(storage.levels)) {
+        storage.levels = {};
+    }
+    return storage;
+};
+
+/**
+ * @public
+ * @static
+ * @memberOf {Logging}
+ * @method
+ *
+ * @param {String} level
+ *
+ * @returns {Logging}
+ * */
+Logging.setLevel = function (level) {
+    var storage = Logging.getStorage();
+    assert.ok(_.has(storage.levels, level));
+    storage.logLevel = level;
 };
 
 module.exports = Logging;
