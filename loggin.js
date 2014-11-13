@@ -54,13 +54,15 @@ function init(logLevels, defaultLevel) {
     }
 }
 
-function bindLogger(name, target) {
+init(LEVELS, NOTE);
+
+config.patch = function (some, name) {
     var logger = config.getLogger(name);
 
-    _.forOwn(config.loggings.global.Logger.prototype, function (val, k) {
-        target[k] = val.bind(logger);
+    _.forOwn(config.loggings.global.Logger.prototype, function (func, name) {
+        some[name] = func.bind(logger);
     });
-}
+};
 
 config.getLogger = function (name) {
     return this.loggings.global.getLogger(name);
@@ -70,10 +72,8 @@ config.setLevel = function (level) {
     return Logging.setLevel(level);
 };
 
-init(LEVELS, NOTE);
-
 config.conf(defaultConfig);
 
-bindLogger('default', config);
+config.patch(config, 'default');
 
 module.exports = config;
