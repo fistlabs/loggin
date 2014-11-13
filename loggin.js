@@ -64,10 +64,27 @@ config.patch = function (some, name) {
     });
 };
 
-config.getLogger = function (name) {
-    return this.loggings.global.getLogger(name);
+/**
+ * @public
+ * @memberOf config
+ * @method
+ *
+ * @param {String} name
+ * @param {String} [logging]
+ *
+ * @returns {Logger}
+ * */
+config.getLogger = function (name, logging) {
+    return this.loggings[logging || 'global'].getLogger(name);
 };
 
+/**
+ * @public
+ * @memberOf config
+ * @method
+ *
+ * @param {String} level
+ * */
 config.setLevel = function (level) {
     return Logging.setLevel(level);
 };
