@@ -56,8 +56,17 @@ function init(logLevels, defaultLevel) {
 
 init(LEVELS, NOTE);
 
-config.patch = function (some, name) {
-    var logger = config.getLogger(name);
+/**
+ * @public
+ * @memberOf config
+ * @method
+ *
+ * @param {Object} some
+ * @param {String} name
+ * @param {String} [logging]
+ * */
+config.setup = function (some, name, logging) {
+    var logger = config.getLogger(name, logging);
 
     _.forOwn(config.loggings.global.Logger.prototype, function (func, name) {
         some[name] = func.bind(logger);
@@ -91,6 +100,6 @@ config.setLevel = function (level) {
 
 config.conf(defaultConfig);
 
-config.patch(config, 'default');
+config.setup(config, 'default');
 
 module.exports = config;
