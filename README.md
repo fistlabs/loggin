@@ -164,7 +164,7 @@ logging.conf({
             }
         },
         bar: {
-            Class: 'loggin/core/stream-handler,
+            Class: 'loggin/core/stream-handler',
             params: {
                 level: 'WARNING',
                 layout: 'pretty',
