@@ -1,6 +1,5 @@
 'use strict';
 
-var assert = require('chai').assert;
 var sprintf = require('sprintf-js').sprintf;
 var strftime = require('fast-strftime');
 
@@ -12,16 +11,21 @@ var strftime = require('fast-strftime');
 function Layout(params) {
     params = Object(params);
 
-    assert.isString(params.strf);
-    assert.isString(params.strftime);
+    /**
+     * @public
+     * @memberOf {Layout}
+     * @property
+     * @type {String}
+     * */
+    this.template = params.template;
 
     /**
      * @public
      * @memberOf {Layout}
      * @property
-     * @type {Object}
+     * @type {String}
      * */
-    this.params = params;
+    this.dateFormat = params.dateFormat;
 }
 
 /**
@@ -54,7 +58,7 @@ Layout.prototype.format = function (vars) {
 
     for (i = 0, l = message.length; i < l; i += 1) {
         vars.message = message[i];
-        results[i] = sprintf(this.params.strf, vars);
+        results[i] = sprintf(this.template, vars);
     }
 
     return results.join('');
@@ -70,7 +74,7 @@ Layout.prototype.format = function (vars) {
  * @returns {Object}
  * */
 Layout.prototype._formatVars = function (vars) {
-    vars.asctime = strftime(this.params.strftime, vars.asctime);
+    vars.date = strftime(this.dateFormat, vars.date);
     return vars;
 };
 

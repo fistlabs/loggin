@@ -4,30 +4,8 @@
 
 var assert = require('assert');
 
-describe('core/layout/layout', function () {
-    var Layout = require('../core/layout/layout');
+describe('core/layout/colored', function () {
     var Colored = require('../core/layout/colored');
-
-    describe('Colored', function () {
-        it('Should throw an error if no params.colors specified', function () {
-            assert.throws(function () {
-                return new Colored({
-                    strftime: 'foo',
-                    strf: 'bar'
-                });
-            });
-        });
-
-        it('Should be an instance of Layout', function () {
-            var colored = new Colored({
-                strf: 'foo',
-                strftime: 'bar',
-                colors: {}
-            });
-
-            assert.ok(colored instanceof Layout);
-        });
-    });
 
     describe('Colored.stylize()', function () {
         it('Should wrap string to escape sequences', function () {
@@ -38,16 +16,16 @@ describe('core/layout/layout', function () {
         });
     });
 
-    describe('colored.format(record)', function () {
+    describe('colored.format(vars)', function () {
         it('Should wrap some record vars in color escapes', function () {
             var vars = {
                 level: 'FOO',
                 message: 'foo',
-                asctime: new Date()
+                date: new Date()
             };
             var colored = new Colored({
-                strf: '%(asctime)s %(level)s %(message)s',
-                strftime: 'foo',
+                template: '%(date)s %(level)s %(message)s',
+                dateFormat: 'foo',
                 colors: {
                     FOO: 'red'
                 }
