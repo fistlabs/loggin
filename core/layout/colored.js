@@ -2,8 +2,6 @@
 
 var Layout = /** @type Layout */ require('./layout');
 
-var assert = require('chai').assert;
-
 var styles = {
     //  dark
     black: 30,
@@ -34,7 +32,14 @@ var styles = {
  * */
 function Colored(params) {
     Layout.call(this, params);
-    assert.isObject(this.params.colors);
+
+    /**
+     * @public
+     * @memberOf {Colored}
+     * @property
+     * @type {Object}
+     * */
+    this.colors = Object(params).colors;
 }
 
 Colored.prototype = Object.create(Layout.prototype);
@@ -55,8 +60,8 @@ Colored.prototype._formatVars = function (vars) {
     vars = Layout.prototype._formatVars.call(this, vars);
     level = vars.level;
 
-    vars.asctime = Colored.stylize('grey', vars.asctime);
-    vars.level = Colored.stylize(this.params.colors[level], level);
+    vars.date = Colored.stylize('grey', vars.date);
+    vars.level = Colored.stylize(this.colors[level], level);
 
     return vars;
 };

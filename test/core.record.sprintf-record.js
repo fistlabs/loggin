@@ -4,17 +4,17 @@
 
 var assert = require('assert');
 
-describe('core/record/sprintf-record', function () {
-    var SprintfRecord = require('../core/record/sprintf-record');
+describe('core/record', function () {
+    var Record = require('../core/record');
 
     describe('record.getVars()', function () {
         it('Should return expected object', function () {
-            var record = new SprintfRecord('foo', 'LOG', ['Hi %s!', 'all']);
+            var record = new Record('foo', 'LOG', ['Hi %s!', 'all']);
             assert.deepEqual(record.getVars(), {
                 name: 'foo',
                 level: 'LOG',
                 process: process.pid,
-                asctime: record.asctime,
+                date: record.date,
                 message: 'Hi all!'
             });
         });

@@ -1,18 +1,20 @@
 'use strict';
 
-var Layout = /** @type Handler */ require('../layout/layout');
-
-var _ = require('lodash-node');
-var assert = require('chai').assert;
-
 /**
  * @class Handler
  *
  * @param {Object} params
- * @param {Layout} layout
  * */
-function Handler(params, layout) {
+function Handler(params) {
     params = Object(params);
+
+    /**
+     * @public
+     * @memberOf {Handler}
+     * @property
+     * @type {String}
+     * */
+    this.level = params.level;
 
     /**
      * @public
@@ -20,26 +22,15 @@ function Handler(params, layout) {
      * @property
      * @type {Object}
      * */
-    this.params = params;
-
-    assert.instanceOf(layout, Layout);
-
-    assert.isObject(params.stream);
-    assert.isFunction(params.stream.write);
-    assert.isObject(params.streams);
-
-    _.forOwn(params.streams, function (stream) {
-        assert.isObject(stream);
-        assert.isFunction(stream.write);
-    });
+    this.layout = params.layout;
 
     /**
      * @public
      * @memberOf {Handler}
      * @property
-     * @type {Layout}
+     * @type {Object}
      * */
-    this._layout = layout;
+    this.stream = params.stream;
 }
 
 /**
@@ -58,25 +49,7 @@ Handler.prototype.constructor = Handler;
  * @param {Object} vars
  * */
 Handler.prototype.handle = function (vars) {
-    this._handleResult(vars, this._layout.format(vars));
-};
-
-/**
- * @protected
- * @memberOf {Handler}
- * @method
- *
- * @param {Object} vars
- * @param {*} entry
- * */
-Handler.prototype._handleResult = function (vars, entry) {
-    var stream = this.params.stream;
-
-    if (this.params.streams[vars.level]) {
-        stream = this.params.streams[vars.level];
-    }
-
-    stream.write(entry);
+    this.stream.write(this.layout.format(vars));
 };
 
 module.exports = Handler;

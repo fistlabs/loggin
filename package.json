@@ -7,8 +7,6 @@
         "Golyshev Dmitrii <golyshev.dmitry@yandex.ru>"
     ],
     "dependencies": {
-        "semver": "4.1.0",
-        "chai": "1.9.2",
         "sprintf-js": "1.0.2",
         "lodash-node": "2.4.1",
         "fast-strftime": "1.1.1",

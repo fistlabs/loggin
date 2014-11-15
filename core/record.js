@@ -1,27 +1,27 @@
 'use strict';
 
-var format = require('../util/format');
+var format = require('./util/format');
 
 /**
- * @class SprintfRecord
+ * @class Record
  *
  * @param {String} name
  * @param {String} level
  * @param {Array|Arguments} args
  * */
-function SprintfRecord(name, level, args) {
+function Record(name, level, args) {
 
     /**
      * @public
-     * @memberOf {SprintfRecord}
+     * @memberOf {Record}
      * @property
      * @type {String}
      * */
-    this.asctime = new Date();
+    this.date = new Date();
 
     /**
      * @public
-     * @memberOf {SprintfRecord}
+     * @memberOf {Record}
      * @property
      * @type {String}
      * */
@@ -29,7 +29,7 @@ function SprintfRecord(name, level, args) {
 
     /**
      * @public
-     * @memberOf {SprintfRecord}
+     * @memberOf {Record}
      * @property
      * @type {String}
      * */
@@ -37,7 +37,7 @@ function SprintfRecord(name, level, args) {
 
     /**
      * @public
-     * @memberOf {SprintfRecord}
+     * @memberOf {Record}
      * @property
      * @type {String}
      * */
@@ -46,42 +46,42 @@ function SprintfRecord(name, level, args) {
 
 /**
  * @public
- * @memberOf {SprintfRecord}
+ * @memberOf {Record}
  * @method
  *
  * @constructs
  * */
-SprintfRecord.prototype.constructor = SprintfRecord;
+Record.prototype.constructor = Record;
 
 /**
  * @public
- * @memberOf {SprintfRecord}
+ * @memberOf {Record}
  * @method
  *
  * @returns {Object}
  * */
-SprintfRecord.prototype.getVars = function () {
+Record.prototype.getVars = function () {
 
     return {
         name: this.name,
         level: this.level,
         process: process.pid,
-        asctime: this.asctime,
+        date: this.date,
         message: this.message
     };
 };
 
 /**
  * @protected
- * @memberOf {SprintfRecord}
+ * @memberOf {Record}
  * @method
  *
  * @param {Array|Arguments} args
  *
  * @returns {String}
  * */
-SprintfRecord.prototype._formatMessage = function (args) {
+Record.prototype._formatMessage = function (args) {
     return format(args);
 };
 
-module.exports = SprintfRecord;
+module.exports = Record;
