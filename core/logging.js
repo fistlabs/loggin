@@ -5,35 +5,6 @@ var Record = /** @type Record */ require('./record');
 
 var _ = require('lodash-node');
 
-function createLevels(logLevels) {
-    var levelsObj = {};
-
-    _.forEachRight(logLevels, function (level, i, levels) {
-        var last = levels.length - 1;
-        var c;
-        var m;
-        var y;
-
-        level = levels[last - i];
-
-        if (i === 0) {
-            y = Infinity;
-        } else if (i === last) {
-            y = -Infinity;
-        } else {
-            i -= 1;
-            last -= 2;
-            c = (Math.pow(5, 0.5) + 1) / 2;
-            m = last * Math.pow(c, last);
-            y = -(i * Math.pow(c, i) - m) / m * 2 - 1;
-        }
-
-        levelsObj[level] = y * Number.MAX_VALUE;
-    });
-
-    return levelsObj;
-}
-
 /**
  * @class Logging
  * */
@@ -45,25 +16,11 @@ function Logging() {
      * @property
      * @type {Object}
      * */
-    this.levels = createLevels([
-        'INTERNAL',
-        'DEBUG',
-        'NOTE',
-        'INFO',
-        'LOG',
-        'WARNING',
-        'ERROR',
-        'FATAL',
-        'SILENT'
-    ]);
-
-    /**
-     * @public
-     * @memberOf {Logging}
-     * @property
-     * @type {String}
-     * */
-    this.logLevel = 'NOTE';
+    this.configs = {
+        enabled: [],
+        layouts: {},
+        handlers: {}
+    };
 
     /**
      * @public
@@ -71,10 +28,15 @@ function Logging() {
      * @property
      * @type {Object}
      * */
-    this.configs = {
-        enabled: [],
-        layouts: {},
-        handlers: {}
+    this.levels = {
+        INTERNAL: 0,
+        DEBUG: 45,
+        NOTE: 80,
+        INFO: 110,
+        LOG: 135,
+        WARNING: 155,
+        ERROR: 170,
+        FATAL: 175
     };
 
     /**
@@ -134,15 +96,15 @@ Logging.prototype.conf = function (config) {
         this.configs.enabled = _.flatten(config.enabled);
     }
 
-    if (_.has(config, 'enable')) {
-        this.configs.enabled = this.configs.enabled.concat(_.flatten(config.enable));
-    }
-
     this.configs.enabled = _.uniq(this.configs.enabled);
 
     this.enabled = _.map(this.configs.enabled, function (name) {
         return this.handlers[name];
     }, this);
+
+    if (_.has(config, 'logLevel')) {
+        this.logLevel = config.logLevel;
+    }
 
     return this;
 };
@@ -172,30 +134,30 @@ Logging.prototype.getLogger = function (name) {
 Logging.prototype.record = function (name, level, args) {
     var i;
     var l;
+    var enabled;
     var handler;
-    var handlers;
     var levels = this.levels;
     var logLevel = this.logLevel;
     var record;
 
-    if (levels[level] < levels[logLevel]) {
-        return false;
-    }
+    if (levels[level] >= levels[logLevel]) {
+        record = new Record(name, level, args);
+        enabled = this.enabled;
 
-    record = new Record(name, level, args);
-    handlers = this.enabled;
+        for (i = 0, l = enabled.length; i < l; i += 1) {
+            handler = enabled[i];
 
-    for (i = 0, l = handlers.length; i < l; i += 1) {
-        handler = handlers[i];
+            if (levels[level] < levels[handler.level]) {
+                continue;
+            }
 
-        if (levels[level] < levels[handler.level]) {
-            continue;
+            handler.handle(record.getVars());
         }
 
-        handler.handle(record.getVars());
+        return true;
     }
 
-    return true;
+    return false;
 };
 
 /**

@@ -84,6 +84,7 @@ describe('core/logging', function () {
             var logging = new Logging();
             var logger = logging.getLogger('x');
             var spy = [];
+            logging.logLevel = 'INFO';
             logging.enabled = [
                 {
                     level: 'LOG',
@@ -224,39 +225,18 @@ describe('core/logging', function () {
             assert.deepEqual(logging.configs.enabled, ['foo']);
         });
 
-        it('Should enable handler', function () {
+        it('Should set logLevel', function () {
             var logging = new Logging();
-            var foo = {
-                x: 42,
-                handle: function () {}
-            };
-            var bar = {
-                z: 42,
-                handle: function () {}
-            };
             logging.conf({
-                handlers: {
-                    foo: foo,
-                    bar: bar
-                }
+                logLevel: 'XYZ'
             });
-            logging.conf({
-                enable: ['foo']
-            });
-
-            assert.strictEqual(logging.enabled[0], foo);
-            assert.strictEqual(logging.enabled.length, 1);
-            assert.deepEqual(logging.configs.enabled, ['foo']);
-
-            logging.conf({
-                enable: ['bar']
-            });
-
-            assert.strictEqual(logging.enabled[0], foo);
-            assert.strictEqual(logging.enabled[1], bar);
-            assert.strictEqual(logging.enabled.length, 2);
-            assert.deepEqual(logging.configs.enabled, ['foo', 'bar']);
-
+            assert.strictEqual(logging.logLevel, 'XYZ');
         });
+    });
+
+    it('Should not log anything if logLevel unknown', function () {
+        var logging = new Logging();
+        logging.logLevel = 'FOOBAR';
+        assert.ok(!logging.getLogger().internal());
     });
 });
