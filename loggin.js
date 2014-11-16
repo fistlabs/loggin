@@ -12,5 +12,3 @@ logging.conf(configs);
 logging.getLogger(path.basename(filename, '.js')).setup(logging);
 
 module.exports = logging;
-
-logging.internal('Using loggin');
