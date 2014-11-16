@@ -8,6 +8,7 @@ function resolve(s) {
 }
 
 module.exports = {
+    logLevel: 'NOTE',
     enabled: ['stdout'],
     handlers: {
         stdout: {

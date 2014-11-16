@@ -34,13 +34,14 @@ Sets logging level
 Available log levels:
 * ```INTERNAL``` use it for logging calls and other internal stuff
 * ```DEBUG``` recommended to use it for debugging applications
-* ```NOTE```  development verbose information
+* ```NOTE```  development verbose information (default)
 * ```INFO``` minor information
 * ```LOG``` significant messages
 * ```WARNING``` really important stuff
 * ```ERROR``` application business logic error condition
 * ```FATAL``` system error condition
-* ```SILENT``` no any records
+
+Set any unknown level to disable any records
 
 ```js
 logging.logLevel = 'LOG'; // production case
@@ -135,17 +136,10 @@ logging.conf({
 ```
 
 ###Ok, how to enable my handler???
-```js
-logging.conf({
-    enable: ['myHandler']
-});
-```
-
-This call just add your handler to existing handler list. Or you can replace all handlers with yourth.
 
 ```js
 logging.conf({
-    enabled: ['myHandler']
+    enabled: ['console']
 });
 ```
 
