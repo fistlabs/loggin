@@ -19,14 +19,12 @@ logging.log('Hello world!');
 ##API
 ###```logging```
 
-####```Logger logging.getLogger(String name)```
-Creates a new named logger
+####```Logger logging.getLogger()```
+Creates a new logger
 
 ```js
-var logger = logging.getLogger('xyz');
-logger.warn('Omg!');
+var logger = logging.getLogger();
 ```
-![Named logger example](/stuff/i/named-logger.png)
 
 ####```String logging.logLevel```
 Sets logging level
