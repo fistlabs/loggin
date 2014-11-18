@@ -28,6 +28,12 @@
     "license": "MIT",
     "main": "loggin",
     "name": "loggin",
+    "keywords": [
+        "logging",
+        "logger",
+        "log",
+        "debug"
+    ],
     "repository": {
         "type": "git",
         "url": "git://github.com/fistlabs/loggin.git"
