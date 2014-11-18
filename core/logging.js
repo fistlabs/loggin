@@ -4,6 +4,7 @@ var Logger = /** @type Logger */ require('./logger');
 var Record = /** @type Record */ require('./record');
 
 var _ = require('lodash-node');
+var path = require('path');
 
 /**
  * @class Logging
@@ -112,12 +113,13 @@ Logging.prototype.conf = function (config) {
 /**
  * @public
  * @memberOf {Logging}
- * @param {String} [name]
+ * @method
  *
  * @returns {Logger}
  * */
-Logging.prototype.getLogger = function (name) {
-    return new Logger(this, name);
+Logging.prototype.getLogger = function () {
+    var filename = (require.main || module.parent).filename;
+    return new Logger(this, path.basename(filename, '.js'));
 };
 
 /**

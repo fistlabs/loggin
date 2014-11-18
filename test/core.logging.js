@@ -21,11 +21,6 @@ describe('core/logging', function () {
             var logging = new Logging();
             assert.ok(logging.getLogger() instanceof Logger);
         });
-        it('Should return logger with passed name', function () {
-            var logging = new Logging();
-            var logger = logging.getLogger('foo');
-            assert.strictEqual(logger.name, 'foo');
-        });
     });
 
     describe('logging.record', function () {
@@ -70,7 +65,7 @@ describe('core/logging', function () {
             var handler = new SpyHandler(new SpyLayout());
             logging.enabled = [handler];
 
-            var logger = logging.getLogger('xyz');
+            var logger = logging.getLogger();
 
             assert.ok(!logger.debug('1'));
             assert.ok(logger.info('2'));
@@ -82,7 +77,7 @@ describe('core/logging', function () {
 
         it('Should ignore handlers which level higher than record level', function () {
             var logging = new Logging();
-            var logger = logging.getLogger('x');
+            var logger = logging.getLogger();
             var spy = [];
             logging.logLevel = 'INFO';
             logging.enabled = [
