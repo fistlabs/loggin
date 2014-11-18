@@ -59,7 +59,7 @@ logger.log('Hello %s', 'world');
 ####```logger.bind(String context)```
 Creates new context logger
 ```js
-var logger = logging.getLogger('app');
+var logger = logging.getLogger();
 var contextLogger = logger.bind(request.id);
 contextLogger.log('Incoming request!');
 ```
