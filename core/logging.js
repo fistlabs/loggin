@@ -118,9 +118,26 @@ Logging.prototype.conf = function (config) {
  * @returns {Logger}
  * */
 Logging.prototype.getLogger = function () {
-    var filename = (require.main || module.parent).filename;
+    var filename = getMainFilename();
     return new Logger(this, path.basename(filename, '.js'));
 };
+
+function getMainFilename() {
+    var current;
+
+    if (require.main) {
+        return require.main.filename;
+    }
+
+    //  repl?
+    current = module;
+
+    while (current.parent) {
+        current = current.parent;
+    }
+
+    return current.filename;
+}
 
 /**
  * @public
