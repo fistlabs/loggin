@@ -12,8 +12,9 @@ Flexible and tiny logging system
 ##Easiest usage
 ```js
 var logging = require('loggin');
-logging.log('Hello world!');
+logging.log('Hello, World!');
 ```
+
 ![Easiest usage example](/stuff/i/easiest-usage.png)
 
 ##API
@@ -101,8 +102,8 @@ Layout class must implement ```layout.format``` method that will be called by ha
 
 #####Available record variables:
 * ```date``` - record creation date
-* ```name``` - logger name
-* ```process``` - process id
+* ```context``` - logger context
+* ```module```  - callsite module name
 * ```message``` - log message
 * ```level``` - log level name
 
