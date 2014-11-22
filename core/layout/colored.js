@@ -60,7 +60,6 @@ Colored.prototype._formatVars = function (vars) {
     vars = Layout.prototype._formatVars.call(this, vars);
     level = vars.level;
 
-    vars.date = Colored.stylize('grey', vars.date);
     vars.level = Colored.stylize(this.colors[level], level);
 
     return vars;

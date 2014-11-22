@@ -32,7 +32,7 @@ describe('core/layout/colored', function () {
             });
 
             assert.strictEqual(colored.format(vars),
-                Colored.stylize('grey', 'foo') + ' ' + Colored.stylize('red', 'FOO') + ' foo');
+                 'foo ' + Colored.stylize('red', 'FOO') + ' foo');
         });
     });
 });

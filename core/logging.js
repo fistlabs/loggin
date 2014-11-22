@@ -4,7 +4,6 @@ var Logger = /** @type Logger */ require('./logger');
 var Record = /** @type Record */ require('./record');
 
 var _ = require('lodash-node');
-var path = require('path');
 
 /**
  * @class Logging
@@ -115,11 +114,18 @@ Logging.prototype.conf = function (config) {
  * @memberOf {Logging}
  * @method
  *
+ * @param {String} [context]
+ *
  * @returns {Logger}
  * */
-Logging.prototype.getLogger = function () {
-    var filename = (require.main || module.parent).filename;
-    return new Logger(this, path.basename(filename, '.js'));
+Logging.prototype.getLogger = function (context) {
+    var logger = new Logger(this, process.pid);
+
+    if (context) {
+        return logger.bind(context);
+    }
+
+    return logger;
 };
 
 /**
@@ -127,13 +133,14 @@ Logging.prototype.getLogger = function () {
  * @memberOf {Logger}
  * @method
  *
- * @param {String} name
+ * @param {String} context
  * @param {String} level
+ * @param {Function} caller
  * @param {Array|Arguments} args
  *
  * @returns {Boolean}
  * */
-Logging.prototype.record = function (name, level, args) {
+Logging.prototype.record = function (context, level, caller, args) {
     var i;
     var l;
     var enabled;
@@ -143,7 +150,7 @@ Logging.prototype.record = function (name, level, args) {
     var record;
 
     if (levels[level] >= levels[logLevel]) {
-        record = new Record(name, level, args);
+        record = new Record(context, level, caller, args);
         enabled = this.enabled;
 
         for (i = 0, l = enabled.length; i < l; i += 1) {
