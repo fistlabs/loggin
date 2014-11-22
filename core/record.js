@@ -1,15 +1,26 @@
 'use strict';
 
 var format = require('./util/format');
+var path = require('path');
+var main = require('./util/main');
 
 /**
  * @class Record
  *
- * @param {String} name
+ * @param {String} context
  * @param {String} level
+ * @param {Function} caller
  * @param {Array|Arguments} args
  * */
-function Record(name, level, args) {
+function Record(context, level, caller, args) {
+
+    /**
+     * @public
+     * @memberOf {Record}
+     * @property
+     * @type {Function}
+     * */
+    this.caller = caller;
 
     /**
      * @public
@@ -25,7 +36,7 @@ function Record(name, level, args) {
      * @property
      * @type {String}
      * */
-    this.name = name;
+    this.context = context;
 
     /**
      * @public
@@ -54,6 +65,34 @@ function Record(name, level, args) {
 Record.prototype.constructor = Record;
 
 /**
+ * @protected
+ * @memberOf {Record}
+ * @method
+ *
+ * @returns {Object}
+ * */
+Record.prototype._getCallSite = function () {
+    var callSite;
+    var stackHolder = {};
+    var stackTraceLimit = Error.stackTraceLimit;
+    var prepareStackTrace = Error.prepareStackTrace;
+
+    Error.stackTraceLimit = 1;
+
+    Error.prepareStackTrace = function (stackHolder, stack) {
+        return stack;
+    };
+
+    Error.captureStackTrace(stackHolder, this.caller);
+
+    callSite = stackHolder.stack[0];
+    Error.prepareStackTrace = prepareStackTrace;
+    Error.stackTraceLimit = stackTraceLimit;
+
+    return callSite;
+};
+
+/**
  * @public
  * @memberOf {Record}
  * @method
@@ -61,13 +100,22 @@ Record.prototype.constructor = Record;
  * @returns {Object}
  * */
 Record.prototype.getVars = function () {
+    var moduleName;
+    var self = this;
 
     return {
-        name: this.name,
+        context: this.context,
         level: this.level,
-        process: process.pid,
         date: this.date,
-        message: this.message
+        message: this.message,
+        module: function () {
+
+            if (!moduleName) {
+                moduleName = path.relative(main.dirname, self._getCallSite().getFileName());
+            }
+
+            return moduleName;
+        }
     };
 };
 

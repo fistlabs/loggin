@@ -16,9 +16,9 @@ var recorders = {
  * @class Logger
  *
  * @param {Logging} logging
- * @param {String} name
+ * @param {String} context
  * */
-function Logger(logging, name) {
+function Logger(logging, context) {
 
     /**
      * @public
@@ -26,15 +26,15 @@ function Logger(logging, name) {
      * @property
      * @type {String}
      * */
-    this.name = name;
+    this.context = context;
 
     /**
-     * @protected
+     * @public
      * @memberOf {Logger}
      * @property
      * @type {Logging}
      * */
-    this._logging = logging;
+    this.logging = logging;
 }
 
 Logger.prototype = {
@@ -58,7 +58,7 @@ Logger.prototype = {
      * @returns {Logger}
      * */
     bind: function (name) {
-        return new Logger(this._logging, this.name + ':' + name);
+        return new Logger(this.logging, this.context + '/' + name);
     },
 
     /**
@@ -85,7 +85,7 @@ _.forOwn(recorders, function (level, name) {
      * @returns {Boolean}
      * */
     Logger.prototype[name] = function () {
-        return this._logging.record(this.name, level, arguments);
+        return this.logging.record(this.context, level, this[name], arguments);
     };
 });
 

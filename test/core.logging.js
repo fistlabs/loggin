@@ -17,9 +17,18 @@ describe('core/logging', function () {
     Logging.prototype = Object.create(StdLogging.prototype);
 
     describe('logging.getLogger()', function () {
-        it('Should return logger', function () {
+        it('Should return logger with global context', function () {
             var logging = new Logging();
-            assert.ok(logging.getLogger() instanceof Logger);
+            var logger = logging.getLogger();
+            assert.ok(logger instanceof Logger);
+            assert.strictEqual(String(logger.context), String(process.pid));
+        });
+
+        it('Should return logger with specified context', function () {
+            var logging = new Logging();
+            var logger = logging.getLogger('foo');
+            assert.ok(logger instanceof Logger);
+            assert.deepEqual(String(logger.context).split(/\W+/), [String(process.pid), 'foo']);
         });
     });
 
@@ -44,7 +53,7 @@ describe('core/logging', function () {
             this.spy.push(vars.message);
         };
 
-        function SpyRecord(a, b, args) {
+        function SpyRecord(a, b, c, args) {
             this.args = [].slice.call(args, 0);
         }
 
@@ -52,11 +61,11 @@ describe('core/logging', function () {
             return this.args;
         };
 
-        it('Should return level match result', function () {
+        it('Should return level match result', function f() {
             var logging = new Logging();
             logging.logLevel = 'INFO';
-            assert.ok(!logging.record('foo', 'DEBUG', []));
-            assert.ok(logging.record('foo', 'INFO', []));
+            assert.ok(!logging.record('foo', 'DEBUG', f, []));
+            assert.ok(logging.record('foo', 'INFO', f, []));
         });
 
         it('Should handle record if level match only', function () {

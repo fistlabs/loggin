@@ -1,6 +1,6 @@
 'use strict';
 
-var hasColor = require('has-color');
+var hasColor = Number(require('has-color'));
 var path = require('path');
 
 function resolve(s) {
@@ -14,7 +14,7 @@ module.exports = {
         stdout: {
             Class: resolve('./core/handler/stream-handler'),
             params: {
-                layout: ['pretty', 'colored'][Number(hasColor)],
+                layout: ['pretty', 'colored'][hasColor],
                 stream: process.stdout
             }
         },
@@ -22,7 +22,7 @@ module.exports = {
             Class: resolve('./core/handler/stream-handler'),
             params: {
                 level: 'WARNING',
-                layout: ['pretty', 'colored'][Number(hasColor)],
+                layout: 'pretty',
                 stream: process.stderr
             }
         }
@@ -31,15 +31,15 @@ module.exports = {
         pretty: {
             Class: resolve('./core/layout/layout'),
             params: {
-                dateFormat: '[%d/%b/%Y:%H:%M:%S %z]',
-                template: '%(date)s %(process)s %(name)s %(level)s - %(message)s\n'
+                dateFormat: '%d/%b/%Y:%H:%M:%S %z',
+                template: '[%(date)s] %(context)s: %(module)s %(level)s - %(message)s\n'
             }
         },
         colored: {
             Class: resolve('./core/layout/colored'),
             params: {
-                dateFormat: '[%d/%b/%Y:%H:%M:%S %z]',
-                template: '%(date)s %(process)s %(name)s %(level)s - %(message)s\n',
+                dateFormat: '%d/%b/%Y:%H:%M:%S %z',
+                template: '\x1B[90m[%(date)s]\x1B[0m %(context)s: %(module)s %(level)s - %(message)s\n',
                 colors: {
                     INTERNAL: 'white',
                     DEBUG: 'fuchsia',
