@@ -26,9 +26,9 @@ describe('loggin', function () {
     });
 
     it('Should have "pretty" layout', function () {
-        assert.ok(loggin.layouts.pretty);
-        assert.strictEqual(typeof loggin.layouts.pretty, 'object');
-        assert.strictEqual(typeof loggin.layouts.pretty.format, 'function');
+        assert.ok(loggin.layouts.verbose);
+        assert.strictEqual(typeof loggin.layouts.verbose, 'object');
+        assert.strictEqual(typeof loggin.layouts.verbose.format, 'function');
     });
 
     it('Should have "colored" layout', function () {
@@ -37,8 +37,8 @@ describe('loggin', function () {
         assert.strictEqual(typeof loggin.layouts.colored.format, 'function');
     });
 
-    it('Should have "stdout" enabled', function () {
-        assert.strictEqual(loggin.enabled[0], loggin.handlers.stdout);
+    it('Should have "stddev" enabled', function () {
+        assert.strictEqual(loggin.configs.enabled[0], 'stddev');
     });
 
     var recorders = ['internal', 'debug', 'info', 'log', 'warn', 'error', 'fatal', 'note'];

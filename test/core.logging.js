@@ -16,6 +16,31 @@ describe('core/logging', function () {
 
     Logging.prototype = Object.create(StdLogging.prototype);
 
+    function SpyLayout() {
+        this.record = {
+            create: function (context, level, caller, args) {
+                return args[0];
+            }
+        };
+    }
+
+    SpyLayout.prototype = Object.create(Layout.prototype);
+
+    SpyLayout.prototype.format = function (vars) {
+        return vars;
+    };
+
+    function SpyHandler(layout) {
+        this.spy = [];
+        this.layout = layout;
+    }
+
+    SpyHandler.prototype = Object.create(Handler.prototype);
+
+    SpyHandler.prototype.handle = function (message) {
+        this.spy.push(message);
+    };
+
     describe('logging.getLogger()', function () {
         it('Should return logger with global context', function () {
             var logging = new Logging();
@@ -34,33 +59,6 @@ describe('core/logging', function () {
 
     describe('logging.record', function () {
 
-        function SpyLayout() {}
-
-        SpyLayout.prototype = Object.create(Layout.prototype);
-
-        SpyLayout.prototype.format = function (vars) {
-            return vars;
-        };
-
-        function SpyHandler(layout) {
-            this.spy = [];
-            this.layout = layout;
-        }
-
-        SpyHandler.prototype = Object.create(Handler.prototype);
-
-        SpyHandler.prototype.handle = function (vars) {
-            this.spy.push(vars.message);
-        };
-
-        function SpyRecord(a, b, c, args) {
-            this.args = [].slice.call(args, 0);
-        }
-
-        SpyRecord.prototype.getVars = function () {
-            return this.args;
-        };
-
         it('Should return level match result', function f() {
             var logging = new Logging();
             logging.logLevel = 'INFO';
@@ -72,7 +70,8 @@ describe('core/logging', function () {
             var logging = new Logging();
             logging.logLevel = 'INFO';
             var handler = new SpyHandler(new SpyLayout());
-            logging.enabled = [handler];
+            logging.configs.enabled = ['foo'];
+            logging.handlers.foo = handler;
 
             var logger = logging.getLogger();
 
@@ -89,14 +88,15 @@ describe('core/logging', function () {
             var logger = logging.getLogger();
             var spy = [];
             logging.logLevel = 'INFO';
-            logging.enabled = [
-                {
-                    level: 'LOG',
-                    handle: function (vars) {
-                        spy.push(vars.message);
-                    }
-                }
-            ];
+            logging.configs.enabled = ['foo'];
+            logging.handlers.foo = {
+                level: 'LOG',
+                handle: function (message) {
+                    spy.push(message);
+                },
+                layout: new SpyLayout()
+            };
+
             logger.info('foo');
             logger.log('bar');
             logger.warn('zot');
@@ -113,6 +113,7 @@ describe('core/logging', function () {
                 layouts: {
                     foo: {
                         template: 'foox',
+                        record: {create: function () {}},
                         format: function () {}
                     }
                 }
@@ -126,10 +127,14 @@ describe('core/logging', function () {
                 layouts: {
                     foo: {
                         Class: './layout/layout',
-                        params: {
+                        record: 'r',
+                        kwargs: {
                             template: 'foox'
                         }
                     }
+                },
+                records: {
+                    r: {create: function () {}}
                 }
             });
             assert.strictEqual(logging.layouts.foo.template, 'foox');
@@ -140,13 +145,19 @@ describe('core/logging', function () {
             logging.conf({
                 layouts: {
                     foo: {
-                        Class: function (params) {
+                        Class: function (record, params) {
+                            this.record = record;
                             this.template = params.template + 'x';
+                            this.format = function () {};
                         },
-                        params: {
+                        record: 'r',
+                        kwargs: {
                             template: 'foo'
                         }
                     }
+                },
+                records: {
+                    r: {create: function () {}}
                 }
             });
             assert.strictEqual(logging.layouts.foo.template, 'foox');
@@ -158,7 +169,8 @@ describe('core/logging', function () {
                 handlers: {
                     foo: {
                         x: 42,
-                        handle: function () {}
+                        handle: function () {},
+                        layout: new SpyLayout()
                     }
                 }
             });
@@ -171,15 +183,14 @@ describe('core/logging', function () {
                 layouts: {
                     foo: {
                         x: 42,
-                        format: function () {}
+                        format: function () {},
+                        record:  {create: function () {}}
                     }
                 },
                 handlers: {
                     bar: {
                         Class: './handler/stream-handler',
-                        params: {
-                            layout: 'foo'
-                        }
+                        layout: 'foo'
                     }
                 }
             });
@@ -193,18 +204,18 @@ describe('core/logging', function () {
                 layouts: {
                     foo: {
                         x: 42,
-                        format: function () {
-                        }
+                        format: function () {},
+                        record: {create: function () {}}
                     }
                 },
                 handlers: {
                     bar: {
-                        Class: function (params) {
-                            this.layout = params.layout;
+                        Class: function (layout) {
+                            this.layout = layout;
+                            this.handle = function () {};
                         },
-                        params: {
-                            layout: 'foo'
-                        }
+                        layout: 'foo',
+                        kwargs: {}
                     }
                 }
             });
@@ -216,7 +227,8 @@ describe('core/logging', function () {
             var logging = new Logging();
             var handler = {
                 x: 42,
-                handle: function () {}
+                handle: function () {},
+                layout: new SpyLayout()
             };
             logging.conf({
                 enabled: ['foo', 'foo'],
@@ -225,7 +237,7 @@ describe('core/logging', function () {
                 }
             });
 
-            assert.strictEqual(logging.enabled[0], handler);
+            assert.strictEqual(logging.configs.enabled[0], 'foo');
             assert.deepEqual(logging.configs.enabled, ['foo']);
         });
 
@@ -235,6 +247,111 @@ describe('core/logging', function () {
                 logLevel: 'XYZ'
             });
             assert.strictEqual(logging.logLevel, 'XYZ');
+        });
+
+        it('Should throw on invalid record definition', function () {
+            assert.throws(function () {
+                return new Logging().conf({
+                    records: {x: 42}
+                });
+            });
+
+            assert.throws(function () {
+                return new Logging().conf({
+                    records: {x: {Class: 'foo'}}
+                });
+            });
+
+            assert.throws(function () {
+                return new Logging().conf({
+                    records: {x: {Class: './core/logging'}}
+                });
+            });
+
+            assert.throws(function () {
+                return new Logging().conf({
+                    records: {x: {Class: function () {}}}
+                });
+            });
+
+            assert.throws(function () {
+                return new Logging().conf({
+                    records: {x: {Class: 'util'}}
+                });
+            });
+        });
+
+        it('Should throw on invalid layout definitions', function () {
+            assert.throws(function () {
+                return new Logging().conf({
+                    layouts: {x: 42}
+                });
+            });
+            assert.throws(function () {
+                return new Logging().conf({
+                    layouts: {x: {Class: 'foo'}}
+                });
+            });
+
+            assert.throws(function () {
+                return new Logging().conf({
+                    layouts: {x: {Class: 'util'}}
+                });
+            });
+
+            assert.throws(function () {
+                return new Logging().conf({
+                    layouts: {x: {Class: function () {}, record: 'foo'}}
+                });
+            });
+
+            assert.throws(function () {
+                return new Logging().conf({
+                    layouts: {x: {Class: function () {}, record: 'foo'}},
+                    records: {foo: {create: function () {}}}
+                });
+            });
+        });
+
+        it('Should throw on invalid handler definition', function () {
+            assert.throws(function () {
+                return new Logging().conf({
+                    handlers: {x: 42}
+                });
+            });
+            assert.throws(function () {
+                return new Logging().conf({
+                    handlers: {x: {Class: 'foo'}}
+                });
+            });
+
+            assert.throws(function () {
+                return new Logging().conf({
+                    handlers: {x: {Class: 'util'}}
+                });
+            });
+
+            assert.throws(function () {
+                return new Logging().conf({
+                    handlers: {x: {Class: function () {}, layout: 'foo'}}
+                });
+            });
+
+            assert.throws(function () {
+                return new Logging().conf({
+                    handlers: {x: {Class: function () {}, layout: 'foo'}},
+                    layouts: {foo: {format: function () {}, record: {create: function () {}}}}
+                });
+            });
+        });
+
+        it('Should throw on invalid enabled cofiguration', function () {
+
+            assert.throws(function () {
+                return new Logging().conf({
+                    enabled: ['foo']
+                });
+            });
         });
     });
 

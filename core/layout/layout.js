@@ -2,13 +2,24 @@
 
 var sprintf = require('sprintf-js').sprintf;
 var strftime = require('fast-strftime');
+var EOL = require('os').EOL;
 
 /**
  * @class Layout
  *
+ * @param {Object} record
  * @param {Object} params
  * */
-function Layout(params) {
+function Layout(record, params) {
+
+    /**
+     * @public
+     * @memberOf {Layout}
+     * @property
+     * @type {Object}
+     * */
+    this.record = record;
+
     params = Object(params);
 
     /**
@@ -42,23 +53,25 @@ Layout.prototype.constructor = Layout;
  * @memberOf {Layout}
  * @method
  *
- * @param {Object} vars
+ * @param {Object} record
  *
  * @returns {String}
  * */
-Layout.prototype.format = function (vars) {
+Layout.prototype.format = function (record) {
     var i;
     var l;
     var message;
     var results;
 
-    vars = this._formatVars(vars);
-    message = vars.message.split(/\r\n|\r|\n/);
+    record = this._formatRecord(record);
+
+    message = record.message.split(EOL);
+
     results = new Array(message.length);
 
     for (i = 0, l = message.length; i < l; i += 1) {
-        vars.message = message[i];
-        results[i] = sprintf(this.template, vars);
+        record.message = message[i];
+        results[i] = sprintf(this.template, record);
     }
 
     return results.join('');
@@ -69,13 +82,13 @@ Layout.prototype.format = function (vars) {
  * @memberOf {Layout}
  * @method
  *
- * @param {Object} vars
+ * @param {Object} record
  *
  * @returns {Object}
  * */
-Layout.prototype._formatVars = function (vars) {
-    vars.date = strftime(this.dateFormat, vars.date);
-    return vars;
+Layout.prototype._formatRecord = function (record) {
+    record.date = strftime(this.dateFormat, record.date);
+    return record;
 };
 
 module.exports = Layout;
