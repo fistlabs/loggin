@@ -44,7 +44,7 @@ Sometimes log messages need to be bound to some execution context. E.g. request 
 console.log('%s - %s', request.id, 'Some happened');
 ```
 
-You should add request id to your any log message to then find some information about this request execution later.
+You should add request id to your any log message to then find some information about this request later.
 With loggin you should not. You can create a logger that context is bound to request id.
 ```js
 //  global context logger (process)
