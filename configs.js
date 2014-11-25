@@ -80,7 +80,7 @@ module.exports = {
         regular: {
             Class: resolve('./core/record/regular')
         },
-        //  verbose record + caller info
+        //  regular record + caller info
         context: {
             Class: resolve('./core/record/context')
         }

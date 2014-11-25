@@ -5,6 +5,21 @@ var strftime = require('fast-strftime');
 var EOL = require('os').EOL;
 
 /**
+ * @usage
+ *  logging.conf({
+ *      layouts: {
+ *          myLayout: {
+ *              Class: 'loggin/core/layout/layout',
+ *              record: 'regular', //   or any other, but `date` variable is required as Date instance
+ *              kwargs {
+ *                  dateFormat: '%H:%M:%S', //  strftime template, special for `date` variable
+ *                  template: '%(date)s - %(message)s',  //  use any variables
+ *                      //  that provided by record, special case is```date```
+ *              }
+ *          }
+ *      }
+ *  });
+ *
  * @class Layout
  *
  * @param {Object} record

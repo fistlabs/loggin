@@ -1,6 +1,19 @@
 'use strict';
 
 /**
+ * @usage
+ *  logging.conf({
+ *      handlers: {
+ *          myHandler: {
+ *              Class: 'loggin/handler/stream-handler',
+ *              layout: 'compact',
+ *              kwargs: {
+ *                  //  any writable interface allowed
+ *                  stream: process.stdout
+ *              }
+ *          }
+ *      }
+ *  });
  * @class Handler
  *
  * @param {Object} layout

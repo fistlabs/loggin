@@ -25,6 +25,22 @@ var styles = {
 };
 
 /**
+ * @usage
+ *  logging.conf({
+ *      layouts: {
+ *          myLayout: {
+ *              Class: 'loggin/core/layout/colored',
+ *              record: 'regular'   //  or any other, but `Date date` and `String level` is required
+ *              kwargs: {
+ *                  //  <levelName>: <colorName> - you can colorize level with any supported colors (see above)
+ *                  colors: {
+ *                      WARNING: 'yellow'
+ *                  }
+ *              }
+ *          }
+ *      }
+ *  })
+ *
  * @class Colored
  * @extends Layout
  *
