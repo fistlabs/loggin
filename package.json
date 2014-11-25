@@ -11,9 +11,8 @@
         "fast-strftime": "1.1.1",
         "has-color": "0.1.7"
     },
-    "description": "Simple extensible logger",
+    "description": "Flexible and tiny logging system",
     "devDependencies": {
-        "stack-trace": "0.0.9",
         "glob": "4.0.4",
         "eslint": "0.7.4",
         "jscs": "1.5.8",
