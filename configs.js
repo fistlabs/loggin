@@ -1,45 +1,67 @@
 'use strict';
 
 var hasColor = Number(require('has-color'));
-var path = require('path');
-
-function resolve(s) {
-    return path.join(__dirname, s);
-}
+var resolve = require.resolve;
 
 module.exports = {
     logLevel: 'NOTE',
-    enabled: ['stdout'],
+    enabled: ['stddev'],
     handlers: {
-        stdout: {
+        //  development case
+        stddev: {
             Class: resolve('./core/handler/stream-handler'),
-            params: {
-                layout: ['pretty', 'colored'][hasColor],
+            layout: ['verbose', 'colored'][hasColor],
+            kwargs: {
                 stream: process.stdout
             }
         },
+        //  production, regular
+        stdout: {
+            Class: resolve('./core/handler/stream-handler'),
+            layout: 'compact',
+            kwargs: {
+                stream: process.stdout
+            }
+        },
+        //  production, warnings
         stderr: {
             Class: resolve('./core/handler/stream-handler'),
-            params: {
+            layout: 'verbose',
+            kwargs: {
                 level: 'WARNING',
-                layout: 'pretty',
                 stream: process.stderr
             }
         }
     },
     layouts: {
-        pretty: {
+        //  compact layout, production case
+        compact: {
             Class: resolve('./core/layout/layout'),
-            params: {
+            record: 'regular',
+            kwargs: {
                 dateFormat: '%d/%b/%Y:%H:%M:%S %z',
-                template: '[%(date)s] %(context)s: %(module)s %(level)s - %(message)s\n'
+                template: '[%(date)s] %(context)s: ' +
+                    '%(level)s - %(message)s\n'
             }
         },
+        //  verbose, ideal for production error formatting
+        verbose: {
+            Class: resolve('./core/layout/layout'),
+            record: 'context',
+            kwargs: {
+                dateFormat: '%d/%b/%Y:%H:%M:%S %z',
+                template: '[%(date)s] %(context)s: ' +
+                    '%(module)s:%(line)d:%(column)d %(level)s - %(message)s\n'
+            }
+        },
+        //  verbose colored layout, only tty-s, development
         colored: {
             Class: resolve('./core/layout/colored'),
-            params: {
+            record: 'context',
+            kwargs: {
                 dateFormat: '%d/%b/%Y:%H:%M:%S %z',
-                template: '\x1B[90m[%(date)s]\x1B[0m %(context)s: %(module)s %(level)s - %(message)s\n',
+                template: '\x1B[90m[%(date)s]\x1B[0m %(context)s: ' +
+                    '%(module)s:%(line)d:%(column)d %(level)s - %(message)s\n',
                 colors: {
                     INTERNAL: 'white',
                     DEBUG: 'fuchsia',
@@ -51,6 +73,16 @@ module.exports = {
                     FATAL: 'maroon'
                 }
             }
+        }
+    },
+    records: {
+        //  regular record
+        regular: {
+            Class: resolve('./core/record/regular')
+        },
+        //  regular record + caller info
+        context: {
+            Class: resolve('./core/record/context')
         }
     }
 };

@@ -1,9 +1,11 @@
+/*eslint complexity: 0*/
 'use strict';
 
 var Logger = /** @type Logger */ require('./logger');
-var Record = /** @type Record */ require('./record');
+var LogginConfError = /** @type LogginConfError */require('./error/loggin-conf-error');
 
 var _ = require('lodash-node');
+var duck = require('./util/duck');
 
 /**
  * @class Logging
@@ -17,9 +19,10 @@ function Logging() {
      * @type {Object}
      * */
     this.configs = {
-        enabled: [],
+        records: {},
         layouts: {},
-        handlers: {}
+        handlers: {},
+        enabled: []
     };
 
     /**
@@ -40,12 +43,12 @@ function Logging() {
     };
 
     /**
-     * @protected
+     * @public
      * @memberOf {Logging}
      * @property
-     * @type {Array}
+     * @type {Object}
      * */
-    this.enabled = [];
+    this.records = {};
 
     /**
      * @public
@@ -77,33 +80,41 @@ Logging.prototype.constructor = Logging;
  * @memberOf {Logging}
  * @method
  *
- * @param {Object} config
+ * @param {Object} configs
  *
  * @returns {Logging}
  * */
-Logging.prototype.conf = function (config) {
-    config = Object(config);
+Logging.prototype.conf = function (configs) {
+    configs = Object(configs);
 
-    this.configs.layouts = _.extend(this.configs.layouts, config.layouts);
+    this.configs.records = _.extend(this.configs.records, configs.records);
+
+    _.extend(this.records, this._createRecords(this.configs.records));
+
+    this.configs.layouts = _.extend(this.configs.layouts, configs.layouts);
 
     _.extend(this.layouts, this._createLayouts(this.configs.layouts));
 
-    this.configs.handlers = _.extend(this.configs.handlers, config.handlers);
+    this.configs.handlers = _.extend(this.configs.handlers, configs.handlers);
 
     _.extend(this.handlers, this._createHandlers(this.configs.handlers));
 
-    if (_.has(config, 'enabled')) {
-        this.configs.enabled = _.flatten(config.enabled);
+    if (_.has(configs, 'enabled')) {
+        if (_.isArray(configs.enabled)) {
+            this.configs.enabled = _.uniq(configs.enabled);
+        } else {
+            this.configs.enabled = [configs.enabled];
+        }
     }
 
-    this.configs.enabled = _.uniq(this.configs.enabled);
-
-    this.enabled = _.map(this.configs.enabled, function (name) {
-        return this.handlers[name];
+    _.forEach(this.configs.enabled, function (handler) {
+        if (!duck.isHandler(this.handlers[handler])) {
+            throw new LogginConfError('No such handler ' + handler);
+        }
     }, this);
 
-    if (_.has(config, 'logLevel')) {
-        this.logLevel = config.logLevel;
+    if (_.has(configs, 'logLevel')) {
+        this.logLevel = configs.logLevel;
     }
 
     return this;
@@ -141,32 +152,68 @@ Logging.prototype.getLogger = function (context) {
  * @returns {Boolean}
  * */
 Logging.prototype.record = function (context, level, caller, args) {
-    var i;
-    var l;
     var enabled;
     var handler;
+    var i;
+    var l;
+    var layout;
     var levels = this.levels;
     var logLevel = this.logLevel;
+    var minLevel = levels[level];
     var record;
 
-    if (levels[level] >= levels[logLevel]) {
-        record = new Record(context, level, caller, args);
-        enabled = this.enabled;
+    if (minLevel >= levels[logLevel]) {
+        enabled = this.configs.enabled;
 
         for (i = 0, l = enabled.length; i < l; i += 1) {
-            handler = enabled[i];
+            handler = this.handlers[enabled[i]];
 
-            if (levels[level] < levels[handler.level]) {
+            if (minLevel < levels[handler.level]) {
                 continue;
             }
 
-            handler.handle(record.getVars());
+            layout = handler.layout;
+            record = layout.record;
+
+            handler.handle(layout.format(record.create(context, level, caller, args)));
         }
 
         return true;
     }
 
     return false;
+};
+
+Logging.prototype._createRecords = function (records) {
+    return _.mapValues(records, function (config) {
+        var RecordClass;
+
+        if (duck.isRecord(config)) {
+            return config;
+        }
+
+        if (!_.has(config, 'Class')) {
+            throw new LogginConfError('Record config must be a {Record} or specify Record constructor');
+        }
+
+        RecordClass = config.Class;
+
+        if (!_.isFunction(RecordClass)) {
+            RecordClass = require(RecordClass);
+        }
+
+        if (!_.isFunction(RecordClass)) {
+            throw new LogginConfError('record.Class must specify constructor');
+        }
+
+        config = new RecordClass(config.kwargs);
+
+        if (!duck.isRecord(config)) {
+            throw new LogginConfError('Record constructor must construct a record');
+        }
+
+        return config;
+    });
 };
 
 /**
@@ -181,18 +228,39 @@ Logging.prototype.record = function (context, level, caller, args) {
 Logging.prototype._createLayouts = function (layouts) {
     return _.mapValues(layouts, function (config) {
         var LayoutClass;
+        var record;
 
-        if (_.isObject(config) && _.isFunction(config.format)) {
+        if (duck.isLayout(config)) {
             return config;
         }
 
-        if (_.isFunction(config.Class)) {
-            LayoutClass = config.Class;
-        } else {
-            LayoutClass = require(config.Class);
+        if (!_.has(config, 'Class')) {
+            throw new LogginConfError('Layout config must be a {Layout} or specify Layout constructor');
         }
 
-        return new LayoutClass(config.params);
+        LayoutClass = config.Class;
+
+        if (!_.isFunction(LayoutClass)) {
+            LayoutClass = require(LayoutClass);
+        }
+
+        if (!_.isFunction(LayoutClass)) {
+            throw new LogginConfError('layout.Class must specify constructor');
+        }
+
+        record = this.records[config.record];
+
+        if (!duck.isRecord(record)) {
+            throw new LogginConfError('No such record instance ' + config.record);
+        }
+
+        config = new LayoutClass(record, config.kwargs);
+
+        if (!duck.isLayout(config)) {
+            throw new LogginConfError('Layout constructor must construct a layout');
+        }
+
+        return config;
     }, this);
 };
 
@@ -208,21 +276,39 @@ Logging.prototype._createLayouts = function (layouts) {
 Logging.prototype._createHandlers = function (handlers) {
     return _.mapValues(handlers, function (config) {
         var HandlerClass;
+        var layout;
 
-        if (_.isObject(config) && _.isFunction(config.handle)) {
+        if (duck.isHandler(config)) {
             return config;
         }
 
-        if (_.isFunction(config.Class)) {
-            HandlerClass = config.Class;
-        } else {
-            HandlerClass = require(config.Class);
+        if (!_.has(config, 'Class')) {
+            throw new LogginConfError('Handler config must be a {Handler} or specify Handler constructor');
         }
 
-        config = _.clone(config.params);
-        config.layout = this.layouts[config.layout];
+        HandlerClass = config.Class;
 
-        return new HandlerClass(config);
+        if (!_.isFunction(HandlerClass)) {
+            HandlerClass = require(HandlerClass);
+        }
+
+        if (!_.isFunction(HandlerClass)) {
+            throw new LogginConfError('handler.Class must specify constructor');
+        }
+
+        layout = this.layouts[config.layout];
+
+        if (!duck.isLayout(layout)) {
+            throw new LogginConfError('No such layout instance' + config.layout);
+        }
+
+        config = new HandlerClass(layout, config.kwargs);
+
+        if (!duck.isHandler(config)) {
+            throw new LogginConfError('Handler constructor must construct a handler');
+        }
+
+        return config;
     }, this);
 };
 

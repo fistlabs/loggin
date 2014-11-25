@@ -15,16 +15,15 @@ describe('core/handler/stream-handler', function () {
     describe('handler.handle()', function () {
         it('Should write to default stream', function () {
             var spy = [];
-            var handler = new Handler({
+            var handler = new Handler(layout, {
                 stream: {
                     write: function (m) {
                         spy.push(m);
                     }
-                },
-                layout: layout
+                }
             });
-            handler.handle({level: 'LOG', message: 'xyz'});
-            handler.handle({level: 'INFO', message: 'xyz'});
+            handler.handle('foo\n');
+            handler.handle('foo\n');
             assert.deepEqual(spy, ['foo\n', 'foo\n']);
         });
     });

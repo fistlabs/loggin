@@ -1,11 +1,34 @@
 'use strict';
 
 /**
+ * @usage
+ *  logging.conf({
+ *      handlers: {
+ *          myHandler: {
+ *              Class: 'loggin/handler/stream-handler',
+ *              layout: 'compact',
+ *              kwargs: {
+ *                  //  any writable interface allowed
+ *                  stream: process.stdout
+ *              }
+ *          }
+ *      }
+ *  });
  * @class Handler
  *
+ * @param {Object} layout
  * @param {Object} params
  * */
-function Handler(params) {
+function Handler(layout, params) {
+
+    /**
+     * @public
+     * @memberOf {Handler}
+     * @property
+     * @type {Object}
+     * */
+    this.layout = layout;
+
     params = Object(params);
 
     /**
@@ -15,14 +38,6 @@ function Handler(params) {
      * @type {String}
      * */
     this.level = params.level;
-
-    /**
-     * @public
-     * @memberOf {Handler}
-     * @property
-     * @type {Object}
-     * */
-    this.layout = params.layout;
 
     /**
      * @public
@@ -46,10 +61,10 @@ Handler.prototype.constructor = Handler;
  * @memberOf {Handler}
  * @method
  *
- * @param {Object} vars
+ * @param {*} message
  * */
-Handler.prototype.handle = function (vars) {
-    this.stream.write(this.layout.format(vars));
+Handler.prototype.handle = function (message) {
+    this.stream.write(message);
 };
 
 module.exports = Handler;

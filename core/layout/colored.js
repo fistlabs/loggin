@@ -25,13 +25,32 @@ var styles = {
 };
 
 /**
+ * @usage
+ *  logging.conf({
+ *      layouts: {
+ *          myLayout: {
+ *              Class: 'loggin/core/layout/colored',
+ *              record: 'regular'   //  or any other, but `Date date` and `String level` is required
+ *              kwargs: {
+ *                  //  <levelName>: <colorName> - you can colorize level with any supported colors (see above)
+ *                  colors: {
+ *                      WARNING: 'yellow'
+ *                  }
+ *              }
+ *          }
+ *      }
+ *  })
+ *
  * @class Colored
  * @extends Layout
  *
+ * @param {Object} record
  * @param {Object} params
  * */
-function Colored(params) {
-    Layout.call(this, params);
+function Colored(record, params) {
+    Layout.call(this, record, params);
+
+    params = Object(params);
 
     /**
      * @public
@@ -39,7 +58,7 @@ function Colored(params) {
      * @property
      * @type {Object}
      * */
-    this.colors = Object(params).colors;
+    this.colors = Object(params.colors);
 }
 
 Colored.prototype = Object.create(Layout.prototype);
@@ -51,18 +70,15 @@ Colored.prototype.constructor = Colored;
  * @memberOf {Colored}
  * @method
  *
- * @param {*} vars
+ * @param {*} record
  *
  * @returns {*}
  * */
-Colored.prototype._formatVars = function (vars) {
-    var level;
-    vars = Layout.prototype._formatVars.call(this, vars);
-    level = vars.level;
+Colored.prototype._formatRecord = function (record) {
+    record = Layout.prototype._formatRecord.call(this, record);
+    record.level = Colored.stylize(this.colors[record.level], record.level);
 
-    vars.level = Colored.stylize(this.colors[level], level);
-
-    return vars;
+    return record;
 };
 
 /**
