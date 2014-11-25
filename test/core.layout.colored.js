@@ -23,7 +23,7 @@ describe('core/layout/colored', function () {
         it('Should wrap some record vars in color escapes', function () {
             var vars = {
                 level: 'FOO',
-                message: 'foo',
+                message: ['foo'],
                 date: new Date()
             };
             var colored = new Colored(record, {
