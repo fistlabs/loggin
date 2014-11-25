@@ -1,4 +1,4 @@
-loggin [![Build Status](https://travis-ci.org/fistlabs/loggin.png?branch=master)](https://travis-ci.org/fistlabs/loggin)
+loggin [![Build Status](https://travis-ci.org/fistlabs/loggin.svg?branch=master)](https://travis-ci.org/fistlabs/loggin)
 =========
 
 Flexible and tiny logging system for [nodejs](https://nodejs.org) platform
@@ -14,7 +14,7 @@ Flexible and tiny logging system for [nodejs](https://nodejs.org) platform
 ##Installation
 
 ```
-npm install loggin
+$ npm install loggin
 ```
 
 ##Easiest usage
@@ -26,7 +26,7 @@ logging.log('Hello, World!');
 
 ##Philosophy
 
-The idea is to create lightweight logging system, with low understanding thershold, but with high customization level.
+The idea is to create lightweight logging system, with low understanding threshold, but with high customization level.
 Every data you log turns to ```record``` object, then that will be formatted with ```layout``` and then will be handled by ```handler```. 
 
 Handler is an object that have a behaviour to store data somewhere. It can be just stdout or file, even database.
@@ -38,7 +38,7 @@ Record factory is special object that gives incoming data like caller, arguments
 
 ##Context appending
 
-Somitimes log messages will be bound to some execution context. E.g. request id.
+Sometimes log messages need to be bound to some execution context. E.g. request id.
 
 ```js
 console.log('%s - %s', request.id, 'Some happened');
@@ -116,7 +116,7 @@ console.log('Start initialization');
 
 ##Advanced customization
 
-The true way to custom your logging is using ```logging.conf```
+The true way to customize your logging is using ```logging.conf```
 
 ####```logging.conf(configs)```
 Incrementaly confugures logging
@@ -200,7 +200,7 @@ There are some built-in Record classes
 
 You can create your own record class and specify it in config.
 ```js
-loggin.conf({
+logging.conf({
     records: {
         //  record descriptor or instance
         recordName: {
