@@ -7,6 +7,6 @@ var logging = new Logging();
 
 logging.conf(configs);
 
-logging.getLogger().setup(logging);
+logging.getLogger('default').setup(logging);
 
 module.exports = logging;
