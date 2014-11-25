@@ -174,9 +174,8 @@ Logging.prototype.record = function (context, level, caller, args) {
 
             layout = handler.layout;
             record = layout.record;
-            record = record.create(context, level, caller, args);
 
-            handler.handle(layout.format(record));
+            handler.handle(layout.format(record.create(context, level, caller, args)));
         }
 
         return true;
