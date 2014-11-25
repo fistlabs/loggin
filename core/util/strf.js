@@ -1,6 +1,6 @@
 'use strict';
 
-var R_TOKENS = /(?:%%|%(?:\(([_a-z]\w*(?:\.[_a-z]\w*)*)\))?([+-])?(\d+)?(?:\.(\d+))?([a-z]))/gi;
+var R_TOKENS = /(?:%%|%(?:\(((?:[^()]+|"[^"]*"|'[^']*')+)\))?([+-])?(\d+)?(?:\.(\d+))?([a-z]))/gi;
 
 var get = require('./get');
 var hasProperty = Object.prototype.hasOwnProperty;

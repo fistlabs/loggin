@@ -132,5 +132,11 @@ describe('core/util/strf', function () {
         it('Should give format arguments separately', function () {
             assert.strictEqual(strf('%(foo)s', {foo: 'foo'}), 'foo');
         });
+
+        it('Should support deep kwargs', function () {
+            assert.strictEqual(strf('Hello, %(who[1])s!', {who: ['nobody', 'golyshevd']}), 'Hello, golyshevd!');
+            assert.strictEqual(strf('Hello, %(["who"][1])s!', {who: ['nobody', 'golyshevd']}), 'Hello, golyshevd!');
+        });
     });
+
 });
