@@ -100,7 +100,11 @@ Logging.prototype.conf = function (configs) {
     _.extend(this.handlers, this._createHandlers(this.configs.handlers));
 
     if (_.has(configs, 'enabled')) {
-        this.configs.enabled = _.uniq(this.configs.enabled.concat(configs.enabled));
+        if (_.isArray(configs.enabled)) {
+            this.configs.enabled = _.uniq(configs.enabled);
+        } else {
+            this.configs.enabled = [configs.enabled];
+        }
     }
 
     _.forEach(this.configs.enabled, function (handler) {
