@@ -23,7 +23,6 @@ strf.format = function (args) {
     if (typeof value === 'string') {
         s = value.replace(R_TOKENS, function ($0, key, sign, width, precision, type) {
             /*eslint max-params: 0*/
-            var value;
 
             if (!type) {
                 return '%';

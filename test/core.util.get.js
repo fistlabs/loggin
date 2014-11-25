@@ -107,7 +107,7 @@ describe('core/util/get', function () {
         });
 
         describe('parse errors', function () {
-            var samples = [
+            var errors = [
                 '.',
                 '[]',
                 '[\'"]',
@@ -118,7 +118,7 @@ describe('core/util/get', function () {
                 'foo-bar'
             ];
 
-            _.forEach(samples, function (s) {
+            _.forEach(errors, function (s) {
                 var shouldText = util.format('Should throw SyntaxError on %j', s);
 
                 it(shouldText, function () {
