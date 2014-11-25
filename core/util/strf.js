@@ -1,8 +1,8 @@
 'use strict';
 
-var Obus = require('obus');
 var R_TOKENS = /(?:%%|%(?:\(([_a-z]\w*(?:\.[_a-z]\w*)*)\))?([+-])?(\d+)?(?:\.(\d+))?([a-z]))/gi;
 
+var get = require('./get');
 var hasProperty = Object.prototype.hasOwnProperty;
 var inspect = require('util').inspect;
 
@@ -32,7 +32,7 @@ strf.format = function (args) {
             if (hasProperty.call(strf.format, type)) {
                 if (key) {
                     usesKwargs = true;
-                    value = Obus.get(kwargs, key);
+                    value = get(kwargs, key);
                 } else {
                     value = args[pos];
                     pos += 1;
