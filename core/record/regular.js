@@ -1,7 +1,5 @@
 'use strict';
 
-var format = require('./../util/format');
-
 /**
  * @class Record
  * */
@@ -29,7 +27,7 @@ Record.prototype.create = function (context, level, caller, args) {
         context: context,
         level: level,
         date: new Date(),
-        message: format(args)
+        message: args
     };
 };
 

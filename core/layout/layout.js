@@ -1,8 +1,10 @@
 'use strict';
 
+var EOL = require('os').EOL;
+
 var sprintf = require('sprintf-js').sprintf;
 var strftime = require('fast-strftime');
-var EOL = require('os').EOL;
+var format = require('../util/format');
 
 /**
  * @usage
@@ -10,8 +12,8 @@ var EOL = require('os').EOL;
  *      layouts: {
  *          myLayout: {
  *              Class: 'loggin/core/layout/layout',
- *              record: 'regular', //   or any other, but `date` variable is required as Date instance
- *              kwargs {
+ *              record: 'regular', //   or any other, but `Date date` and `Array message` variables is required
+ *              kwargs: {
  *                  dateFormat: '%H:%M:%S', //  strftime template, special for `date` variable
  *                  template: '%(date)s - %(message)s',  //  use any variables
  *                      //  that provided by record, special case is```date```
@@ -103,6 +105,8 @@ Layout.prototype.format = function (record) {
  * */
 Layout.prototype._formatRecord = function (record) {
     record.date = strftime(this.dateFormat, record.date);
+    record.message = format(record.message);
+
     return record;
 };
 

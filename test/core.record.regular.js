@@ -17,7 +17,7 @@ describe('core/record/regular', function () {
                 context: 'foo',
                 level: 'LOG',
                 date: vars.date,
-                message: 'Hi all!'
+                message: ['Hi %s!', 'all']
             });
         });
     });

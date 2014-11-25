@@ -30,7 +30,8 @@ var styles = {
  *      layouts: {
  *          myLayout: {
  *              Class: 'loggin/core/layout/colored',
- *              record: 'regular'   //  or any other, but `Date date` and `String level` is required
+ *              record: 'regular'   //  or any other, but `Array message`,
+ *                  //  `Date date` and `String level` variables is required
  *              kwargs: {
  *                  //  <levelName>: <colorName> - you can colorize level with any supported colors (see above)
  *                  colors: {

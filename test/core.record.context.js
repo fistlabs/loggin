@@ -16,7 +16,7 @@ describe('core/record/context', function () {
                 context: 'foo',
                 level: 'LOG',
                 date: vars.date,
-                message: 'Hi all!',
+                message: ['Hi %s!', 'all'],
 
                 module: vars.module,
                 callsite: vars.callsite,

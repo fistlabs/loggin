@@ -19,7 +19,7 @@ describe('core/layout/layout', function () {
             });
             var vars = {
                 date: new Date(),
-                message: 'bar\nbaz'
+                message: ['bar\nbaz']
             };
             assert.ok(duck.isRecord(layout.record));
             assert.strictEqual(layout.format(vars), 'foo bar\nfoo baz\n');
