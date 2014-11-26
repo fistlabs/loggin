@@ -1,13 +1,47 @@
 'use strict';
 
-var R_TOKENS = /(?:%%|%(?:\(((?:[^()]+|"[^"]*"|'[^']*')+)\))?([+-])?(\d+)?(?:\.(\d+))?([a-z]))/gi;
+var R_TOKENS = /^(?:%(%)|%(?:\(((?:[^()]+|"[^"]*"|'[^']*')+)\))?([+-])?(\d+)?(?:\.(\d+))?([a-z])|([^%]+)|([\s\S]+))/;
 
-var get = require('./get');
+var get = require('obus').get;
 var hasProperty = Object.prototype.hasOwnProperty;
 var inspect = require('util').inspect;
 
 function strf() {
     return strf.format(arguments);
+}
+
+strf.cache = {};
+
+strf.parse = function (s) {
+    if (!hasProperty.call(strf.cache, s)) {
+        strf.cache[s] = parse(s);
+    }
+
+    return strf.cache[s];
+};
+
+function parse(s) {
+    var m;
+    var parts = [];
+
+    /*eslint no-cond-assign: 0*/
+    while (m = R_TOKENS.exec(s)) {
+        s = s.substr(m[0].length);
+
+        if (m[1]) {
+            parts[parts.length] = m[1];
+            continue;
+        }
+
+        if (!m[6]) {
+            parts[parts.length] = m[7] || m[8];
+            continue;
+        }
+
+        parts[parts.length] = [m[6], m[2], m[3], m[4], m[5], m[0]];
+    }
+
+    return parts;
 }
 
 strf.format = function (args) {
@@ -19,31 +53,40 @@ strf.format = function (args) {
     var stack = false;
     var usesKwargs = false;
     var value = args[0];
+    var parts;
+    var i;
+    var j;
+    var part;
 
     if (typeof value === 'string') {
-        s = value.replace(R_TOKENS, function ($0, key, sign, width, precision, type) {
-            /*eslint max-params: 0*/
+        parts = strf.parse(value);
 
-            if (!type) {
-                return '%';
+        for (i = 0, j = parts.length; i < j; i += 1) {
+            part = parts[i];
+
+            if (typeof part === 'string') {
+                s += part;
+                continue;
             }
 
-            if (hasProperty.call(strf.format, type)) {
-                if (key) {
+            if (hasProperty.call(strf.format, part[0])) {
+                if (part[1]) {
                     usesKwargs = true;
-                    value = get(kwargs, key);
+                    value = get(kwargs, part[1]);
                 } else {
                     value = args[pos];
                     pos += 1;
                 }
 
                 if (value !== void 0) {
-                    return strf.format[type](value, sign, width, precision);
+                    s += strf.format[part[0]](value, part[2], part[3], part[4]);
+                    continue;
                 }
             }
 
-            return $0;
-        });
+            s += part[5];
+        }
+
     } else if (l) {
         if (value instanceof Error && value.stack) {
             s = value.stack;
