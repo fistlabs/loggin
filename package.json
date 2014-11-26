@@ -25,6 +25,7 @@
         "gulp-istanbul": "0.4.0"
     },
     "license": "MIT",
+    "name": "loggin",
     "main": "loggin",
     "context": "loggin",
     "keywords": [
