@@ -2,7 +2,7 @@
 
 var R_TOKENS = /(?:%%|%(?:\(((?:[^()]+|"[^"]*"|'[^']*')+)\))?([+-])?(\d+)?(?:\.(\d+))?([a-z]))/gi;
 
-var get = require('./get');
+var get = require('obus').get;
 var hasProperty = Object.prototype.hasOwnProperty;
 var inspect = require('util').inspect;
 
