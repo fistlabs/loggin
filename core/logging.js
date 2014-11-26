@@ -184,6 +184,15 @@ Logging.prototype.record = function (context, level, caller, args) {
     return false;
 };
 
+/**
+ * @protected
+ * @memberOf {Logger}
+ * @method
+ *
+ * @param {Object} records
+ *
+ * @returns {Object}
+ * */
 Logging.prototype._createRecords = function (records) {
     return _.mapValues(records, function (config) {
         var RecordClass;
@@ -299,7 +308,7 @@ Logging.prototype._createHandlers = function (handlers) {
         layout = this.layouts[config.layout];
 
         if (!duck.isLayout(layout)) {
-            throw new LogginConfError('No such layout instance' + config.layout);
+            throw new LogginConfError('No such layout instance ' + config.layout);
         }
 
         config = new HandlerClass(layout, config.kwargs);
