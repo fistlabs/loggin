@@ -37,7 +37,7 @@ function Logger(logging, context) {
     this.logging = logging;
 }
 
-Logger.prototype = {
+Logger.prototype = /** @Lends Logger.prototype */ {
 
     /**
      * @public
@@ -55,10 +55,10 @@ Logger.prototype = {
      *
      * @param {String} name
      *
-     * @returns {Logger}
+     * @returns {Object}
      * */
     bind: function (name) {
-        return new Logger(this.logging, this.context + '/' + name);
+        return new this.constructor(this.logging, this.context + '/' + name);
     },
 
     /**
