@@ -239,6 +239,13 @@ describe('core/logging', function () {
 
             assert.strictEqual(logging.configs.enabled[0], 'foo');
             assert.deepEqual(logging.configs.enabled, ['foo']);
+
+            logging.conf({
+                enabled: 'foo'
+            });
+
+            assert.strictEqual(logging.configs.enabled[0], 'foo');
+            assert.deepEqual(logging.configs.enabled, ['foo']);
         });
 
         it('Should set logLevel', function () {
