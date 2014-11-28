@@ -3,14 +3,7 @@
 var path = require('path');
 
 function getMainFileName() {
-    var current;
-
-    if (require.main) {
-        return require.main.filename;
-    }
-
-    //  repl?
-    current = module;
+    var current = module;
 
     while (current.parent) {
         current = current.parent;

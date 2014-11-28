@@ -85,8 +85,14 @@ describe('core/util/strf', function () {
 
     describe('strf.format', function () {
         var format = strf.format;
+
         it('Should interpret "%%" sequences as "%"', function () {
             assert.strictEqual(format(['%%%%']), '%%');
+        });
+
+        it('Should interpret single unmatched "%" as "%"', function () {
+            assert.strictEqual(format(['%']), '%');
+            assert.strictEqual(format(['foo%']), 'foo%');
         });
 
         it('Should format placeholders according to type', function () {
