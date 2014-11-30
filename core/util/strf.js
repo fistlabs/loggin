@@ -78,10 +78,8 @@ strf.format = function (args) {
                     pos += 1;
                 }
 
-                if (value !== void 0) {
-                    s += strf.format[part[0]](value, part[2], part[3], part[4]);
-                    continue;
-                }
+                s += strf.format[part[0]](value, part[2], part[3], part[4]);
+                continue;
             }
 
             s += part[5];

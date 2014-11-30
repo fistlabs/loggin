@@ -103,8 +103,8 @@ describe('core/util/strf', function () {
             assert.strictEqual(format(['%s, %d, %(foo)s, %%s', 'foo', 42, {foo: 'bar'}]), 'foo, 42, bar, %s');
         });
 
-        it('Should skip undefined values', function () {
-            assert.strictEqual(format(['%s, %s, %(foo)s', 'foo', void 0, {}]), 'foo, %s, %(foo)s');
+        it('Should not skip undefined values', function () {
+            assert.strictEqual(format(['%s, %s, %(foo)s', 'foo', void 0, {}]), 'foo, undefined, undefined');
         });
 
         it('Should skip unsupported types', function () {
