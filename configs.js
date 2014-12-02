@@ -1,6 +1,5 @@
 'use strict';
 
-var hasColor = Number(require('has-color'));
 var resolve = require.resolve;
 
 module.exports = {
@@ -10,7 +9,7 @@ module.exports = {
         //  development case
         stddev: {
             Class: resolve('./core/handler/stream-handler'),
-            layout: ['verbose', 'colored'][hasColor],
+            layout: 'colored',
             kwargs: {
                 stream: process.stdout
             }
@@ -51,7 +50,7 @@ module.exports = {
             kwargs: {
                 dateFormat: '%d/%b/%Y:%H:%M:%S %z',
                 template: '[%(date)s] %(context)s: ' +
-                    '%(module)s:%(line)d:%(column)d %(level)s - %(message)s\n'
+                    '%(filename)s:%(line)d:%(column)d %(level)s - %(message)s\n'
             }
         },
         //  verbose colored layout, only tty-s, development

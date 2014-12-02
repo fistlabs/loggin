@@ -64,7 +64,8 @@ Context.prototype.create = function (context, level, caller, args) {
     record.callsite = callsite;
     record.line = callsite.getLineNumber();
     record.column = callsite.getColumnNumber();
-    record.module = path.relative(main.dirname, callsite.getFileName());
+    record.filename = path.resolve(callsite.getFileName());
+    record.module = path.relative(main.dirname, record.filename);
 
     return record;
 };
