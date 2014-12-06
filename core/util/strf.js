@@ -78,6 +78,10 @@ strf.format = function (args) {
                     pos += 1;
                 }
 
+                if (typeof value === 'function') {
+                    value = value();
+                }
+
                 s += strf.format[part[0]](value, part[2], part[3], part[4]);
                 continue;
             }
