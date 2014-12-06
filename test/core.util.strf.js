@@ -132,6 +132,12 @@ describe('core/util/strf', function () {
         it('Should not inspect kwargs as extra argument', function () {
             assert.strictEqual(format(['%(foo)s', 'bar', {foo: 'foo'}]), 'foo bar');
         });
+
+        it('Should support functional args', function () {
+            assert.strictEqual(format(['%s', function () {
+                return 'foo';
+            }]), 'foo');
+        });
     });
 
     describe('strf', function () {
