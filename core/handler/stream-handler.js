@@ -43,6 +43,14 @@ function Handler(layout, params) {
      * @public
      * @memberOf {Handler}
      * @property
+     * @type {String}
+     * */
+    this.maxLevel = params.maxLevel;
+
+    /**
+     * @public
+     * @memberOf {Handler}
+     * @property
      * @type {Object}
      * */
     this.stream = params.stream;

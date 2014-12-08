@@ -6,25 +6,25 @@ var main = require('../util/main');
 var path = require('path');
 
 /**
- * @class Context
+ * @class Verbose
  * @extends Record
  * */
-function Context(params) {
+function Verbose(params) {
     Regular.call(this, params);
 }
 
-Context.prototype = Object.create(Regular.prototype);
+Verbose.prototype = Object.create(Regular.prototype);
 
-Context.prototype.constructor = Context;
+Verbose.prototype.constructor = Verbose;
 
 /**
  * @protected
- * @memberOf {Context}
+ * @memberOf {Verbose}
  * @method
  *
  * @returns {Object}
  * */
-Context.prototype._getCallSite = function (caller) {
+Verbose.prototype._getCallSite = function (caller) {
     var callSite;
     var stackHolder = {};
     var stackTraceLimit = Error.stackTraceLimit;
@@ -47,7 +47,7 @@ Context.prototype._getCallSite = function (caller) {
 
 /**
  * @public
- * @memberOf {Context}
+ * @memberOf {Verbose}
  * @method
  *
  * @param {String} context
@@ -57,7 +57,7 @@ Context.prototype._getCallSite = function (caller) {
  *
  * @returns {*}
  * */
-Context.prototype.create = function (context, level, caller, args) {
+Verbose.prototype.create = function (context, level, caller, args) {
     var record = Regular.prototype.create.call(this, context, level, caller, args);
     var callsite = this._getCallSite(caller);
 
@@ -70,4 +70,4 @@ Context.prototype.create = function (context, level, caller, args) {
     return record;
 };
 
-module.exports = Context;
+module.exports = Verbose;

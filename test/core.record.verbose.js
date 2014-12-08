@@ -5,7 +5,7 @@
 var assert = require('assert');
 
 describe('core/record/context', function () {
-    var Record = require('../core/record/context');
+    var Record = require('../core/record/verbose');
     var record = new Record();
 
     describe('record.create()', function () {

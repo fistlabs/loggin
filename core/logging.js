@@ -159,16 +159,18 @@ Logging.prototype.record = function (context, level, caller, args) {
     var layout;
     var levels = this.levels;
     var logLevel = this.logLevel;
-    var minLevel = levels[level];
+    var curLevel = levels[level];
     var record;
 
-    if (minLevel >= levels[logLevel]) {
+    //  support NaN curLevel as disabled logger
+    if (curLevel >= levels[logLevel]) {
         enabled = this.configs.enabled;
 
         for (i = 0, l = enabled.length; i < l; i += 1) {
             handler = this.handlers[enabled[i]];
 
-            if (minLevel < levels[handler.minLevel]) {
+            //  support NaN handler.(min|max)Level
+            if (curLevel < levels[handler.minLevel] || levels[handler.maxLevel] < curLevel) {
                 continue;
             }
 

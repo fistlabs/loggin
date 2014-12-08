@@ -24,6 +24,17 @@ var styles = {
     white: 97
 };
 
+var colorByLevel = {
+    INTERNAL: 'white',
+    DEBUG: 'fuchsia',
+    NOTE: 'blue',
+    INFO: 'aqua',
+    LOG: 'lime',
+    WARNING: 'yellow',
+    ERROR: 'red',
+    FATAL: 'maroon'
+};
+
 /**
  * @usage
  *  logging.conf({
@@ -32,12 +43,7 @@ var styles = {
  *              Class: 'loggin/core/layout/colored',
  *              record: 'regular'   //  or any other, but `Array message`,
  *                  //  `Date date` and `String level` variables is required
- *              kwargs: {
- *                  //  <levelName>: <colorName> - you can colorize level with any supported colors (see above)
- *                  colors: {
- *                      WARNING: 'yellow'
- *                  }
- *              }
+ *              kwargs: {}
  *          }
  *      }
  *  })
@@ -77,7 +83,7 @@ Colored.prototype.constructor = Colored;
  * */
 Colored.prototype._formatRecord = function (record) {
     record = Layout.prototype._formatRecord.call(this, record);
-    record.level = Colored.stylize(this.colors[record.level], record.level);
+    record.level = Colored.stylize(colorByLevel[record.level], record.level);
 
     return record;
 };
