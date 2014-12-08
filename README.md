@@ -224,7 +224,7 @@ logging.conf({
 ```
 
 ###Handler log levels
-You can support ```handler.level``` property which can be used to handle the only records which level higher or equal to ```handler.level```
+You can support ```handler.minLevel``` property which can be used to handle the only records which level higher or equal to ```handler.minLevel```
 
 ```js
 logging.conf({
@@ -241,7 +241,7 @@ logging.conf({
             Class: 'loggin/core/stream-handler',
             layout: 'verbose',
             kwargs: {
-                level: 'WARNING',
+                minLevel: 'WARNING',
                 stream: process.stderr
             }
         }

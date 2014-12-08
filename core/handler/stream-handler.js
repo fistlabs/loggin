@@ -37,7 +37,7 @@ function Handler(layout, params) {
      * @property
      * @type {String}
      * */
-    this.level = params.level;
+    this.minLevel = params.minLevel;
 
     /**
      * @public

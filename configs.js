@@ -27,7 +27,7 @@ module.exports = {
             Class: resolve('./core/handler/stream-handler'),
             layout: 'verbose',
             kwargs: {
-                level: 'WARNING',
+                minLevel: 'WARNING',
                 stream: process.stderr
             }
         }
