@@ -83,14 +83,14 @@ describe('core/logging', function () {
             assert.deepEqual(handler.spy, ['2', '4']);
         });
 
-        it('Should ignore handlers which level higher than record level', function () {
+        it('Should ignore handlers which minLevel higher than record level', function () {
             var logging = new Logging();
             var logger = logging.getLogger();
             var spy = [];
             logging.logLevel = 'INFO';
             logging.configs.enabled = ['foo'];
             logging.handlers.foo = {
-                level: 'LOG',
+                minLevel: 'LOG',
                 handle: function (message) {
                     spy.push(message);
                 },

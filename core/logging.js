@@ -168,7 +168,7 @@ Logging.prototype.record = function (context, level, caller, args) {
         for (i = 0, l = enabled.length; i < l; i += 1) {
             handler = this.handlers[enabled[i]];
 
-            if (minLevel < levels[handler.level]) {
+            if (minLevel < levels[handler.minLevel]) {
                 continue;
             }
 
