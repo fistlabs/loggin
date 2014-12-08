@@ -4,28 +4,38 @@ var resolve = require.resolve;
 
 module.exports = {
     logLevel: 'NOTE',
-    enabled: ['stddev'],
+    enabled: ['stdoutColorRegular', 'stderrColorVerbose'],
     handlers: {
-        //  development case
-        stddev: {
+        //  development regular logs
+        stdoutColorRegular: {
             Class: resolve('./core/handler/stream-handler'),
-            layout: 'colored',
+            layout: 'colorRegular',
+            kwargs: {
+                maxLevel: 'LOG',
+                stream: process.stderr
+            }
+        },
+        //  development errors
+        stderrColorVerbose: {
+            Class: resolve('./core/handler/stream-handler'),
+            layout: 'colorVerbose',
+            kwargs: {
+                minLevel: 'WARNING',
+                stream: process.stderr
+            }
+        },
+        //  production regular log
+        stdoutCleanRegular: {
+            Class: resolve('./core/handler/stream-handler'),
+            layout: 'cleanRegular',
             kwargs: {
                 stream: process.stdout
             }
         },
-        //  production, regular
-        stdout: {
+        //  production warnings+
+        stderrCleanVerbose: {
             Class: resolve('./core/handler/stream-handler'),
-            layout: 'compact',
-            kwargs: {
-                stream: process.stdout
-            }
-        },
-        //  production, warnings
-        stderr: {
-            Class: resolve('./core/handler/stream-handler'),
-            layout: 'verbose',
+            layout: 'cleanVerbose',
             kwargs: {
                 minLevel: 'WARNING',
                 stream: process.stderr
@@ -33,44 +43,37 @@ module.exports = {
         }
     },
     layouts: {
-        //  compact layout, production case
-        compact: {
+        cleanRegular: {
             Class: resolve('./core/layout/layout'),
             record: 'regular',
             kwargs: {
                 dateFormat: '%d/%b/%Y:%H:%M:%S %z',
-                template: '[%(date)s] %(context)s: ' +
-                    '%(level)s - %(message)s\n'
+                template: '[%(date)s] %(context)s: %(level)s — %(message)s\n'
             }
         },
-        //  verbose, ideal for production error formatting
-        verbose: {
+        cleanVerbose: {
             Class: resolve('./core/layout/layout'),
-            record: 'context',
+            record: 'verbose',
             kwargs: {
                 dateFormat: '%d/%b/%Y:%H:%M:%S %z',
-                template: '[%(date)s] %(context)s: ' +
-                    '%(filename)s:%(line)d:%(column)d %(level)s - %(message)s\n'
+                template: '[%(date)s] %(context)s: %(filename)s:%(line)d:%(column)d %(level)s — %(message)s\n'
             }
         },
-        //  verbose colored layout, only tty-s, development
-        colored: {
+        colorRegular: {
             Class: resolve('./core/layout/colored'),
-            record: 'context',
+            record: 'regular',
             kwargs: {
                 dateFormat: '%d/%b/%Y:%H:%M:%S %z',
-                template: '\x1B[90m[%(date)s]\x1B[0m %(context)s: ' +
-                    '%(module)s:%(line)d:%(column)d %(level)s - %(message)s\n',
-                colors: {
-                    INTERNAL: 'white',
-                    DEBUG: 'fuchsia',
-                    NOTE: 'blue',
-                    INFO: 'aqua',
-                    LOG: 'lime',
-                    WARNING: 'yellow',
-                    ERROR: 'red',
-                    FATAL: 'maroon'
-                }
+                template: '\x1B[90m[%(date)s]\x1B[0m %(context)s: %(level)s — %(message)s\n'
+            }
+        },
+        colorVerbose: {
+            Class: resolve('./core/layout/colored'),
+            record: 'verbose',
+            kwargs: {
+                dateFormat: '%d/%b/%Y:%H:%M:%S %z',
+                template: '\x1B[90m[%(date)s]\x1B[0m ' +
+                    '%(context)s: %(module)s:%(line)d:%(column)d %(level)s — %(message)s\n'
             }
         }
     },
@@ -79,9 +82,9 @@ module.exports = {
         regular: {
             Class: resolve('./core/record/regular')
         },
-        //  regular record + caller info
-        context: {
-            Class: resolve('./core/record/context')
+        //  regular record + context data
+        verbose: {
+            Class: resolve('./core/record/verbose')
         }
     }
 };

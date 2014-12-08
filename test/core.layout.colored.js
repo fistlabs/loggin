@@ -22,22 +22,19 @@ describe('core/layout/colored', function () {
     describe('colored.format(vars)', function () {
         it('Should wrap some record vars in color escapes', function () {
             var vars = {
-                level: 'FOO',
+                level: 'ERROR',
                 message: ['foo'],
                 date: new Date()
             };
             var colored = new Colored(record, {
                 template: '%(date)s %(level)s %(message)s',
-                dateFormat: 'foo',
-                colors: {
-                    FOO: 'red'
-                }
+                dateFormat: 'foo'
             });
 
             assert.ok(duck.isRecord(colored.record));
 
             assert.strictEqual(colored.format(vars),
-                 'foo ' + Colored.stylize('red', 'FOO') + ' foo');
+                 'foo ' + Colored.stylize('red', 'ERROR') + ' foo');
         });
     });
 });
