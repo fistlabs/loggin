@@ -143,7 +143,7 @@ logging.conf({
             //  path to handler class or direct link to class
             Class: 'loggin/core/handler/stream-handler',
             //  Link to handler's layout, layout instance will be passed to handler constructor as first argument
-            layout: 'verbose',
+            layout: 'colorVerbose',
             //  handlers keyword arguments, will be passed to handler constructor as second argument
             kwargs: {
                 stream: process.stdout,
@@ -196,7 +196,7 @@ logging.conf({
 There are some built-in Record classes
 
 * ```loggin/core/record/regular``` - produces ```date```, ```context```, ```message``` and ```level``` variables.
-* ```loggin/core/record/context``` - inherits from ```regular```. Also produces ```module```, ```line``` and ```column``` variables.
+* ```loggin/core/record/verbose``` - inherits from ```regular```. Also produces ```module```, ```filename```, ```line``` and ```column``` variables.
 
 You can create your own record class and specify it in config.
 ```js
@@ -224,7 +224,7 @@ logging.conf({
 ```
 
 ###Handler log levels
-You can support ```handler.minLevel``` property which can be used to handle the only records which level higher or equal to ```handler.minLevel```
+You can support ```handler.minLevel``` and ```handler.maxLevel``` properties in your handlers which can be used to enable your handlers in some record level ranges
 
 ```js
 logging.conf({
@@ -232,14 +232,15 @@ logging.conf({
     handlers: {
         foo: {
             Class: 'loggin/core/stream-handler',
-            layout: 'verbose',
+            layout: 'colorRegular',
             kwargs: {
+                maxLevel: 'LOG',
                 stream: process.stdout
             }
         },
         bar: {
             Class: 'loggin/core/stream-handler',
-            layout: 'verbose',
+            layout: 'colorVerbose',
             kwargs: {
                 minLevel: 'WARNING',
                 stream: process.stderr
@@ -249,7 +250,53 @@ logging.conf({
 });
 ```
 
-Configuration like that let you to write all the records to stdout and WARNING+ records to stderr.
+Configuration like this let you to write ```LOG``` and less records to stdout and ```WARNING``` and higher records to stderr.
+
+##Default configuration
+```loggin``` gives you rich and pretty default configuration. There are some handlers, layouts and two record instances.
+
+###Records
+* ```regular``` - regular record provides fields:
+  * ```String context``` - logger context
+  * ```String level``` - record log level
+  * ```Date date``` - record creation date
+  * ```Array message``` - all the arguments passed to log function
+
+* ```verbose``` - more rich record than ```regular``` provides the fields:
+  * ```String context``` - logger context
+  * ```String level``` - record log level
+  * ```Date date``` - record creation date
+  * ```Array message``` - all the arguments passed to log function
+  * ```Number line``` - log calling line number
+  * ```Number column``` - log calling column number
+  * ```String filename``` - log caller absolute filename
+  * ```String module``` - log caller filename relative from main module dirname
+ 
+###Layouts
+* ```cleanRegular``` - the layout, ideal for logging regular messages into file
+* ```cleanVerbose``` - may be pretty to log warngings and errors into file, including caller data
+* ```colorRegular``` - ideal for logging regular messages to terminal
+* ```colorVerbose``` - good for logging errors and warngins to terminal, including caller data
+
+###Handlers
+* ```stdoutColorRegular``` - writes colored compact entries which level less then ```WARNING``` to standard output (dev)
+* ```stderrColorVerbose``` - writes colored verbose entries which level higher then ```LOG``` to standard error output (dev)
+* ```stdoutCleanRegular``` - writes all the entries to standard output in pretty compact layout (prod)
+* ```stderrCleanVerbose``` - writes ```WARNING``` and higher entries to standard error output in super verbose layout (prod)
+
+###Default setup
+By default ```stdoutColorRegular``` and ```stderrColorVerbose``` handlers are enabled and ```NOTE``` log level is enabled.
+In this case you can see really important data in pretty form in your terminal output. It is development setup. In production case you can set higher ```logLevel``` and enable ```stdoutCleanRegular``` and ```stderrCleanVerbose``` handlers to see clean logs in the files, written by you application starting daemon for example.
+```js
+var loggin = require('loggin');
+
+if (process.env.NODE_ENV !== 'development') {
+    loggin.conf({
+        logLevel: 'LOG',
+        enabled: ['stdoutCleanRegular', 'stdoutCleanVerbose']
+    });
+}
+```
 
 ##Complete configuration example
 See loggin's [default configuration](/configs.js) as example
