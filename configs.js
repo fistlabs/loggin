@@ -65,7 +65,7 @@ module.exports = {
             Class: resolve('./core/layout/colored'),
             record: 'regular',
             kwargs: {
-                dateFormat: '%d/%b/%Y:%H:%M:%S %z',
+                dateFormat: '%H:%M:%S.%L',
                 template: '\x1B[90m[%(date)s]\x1B[0m %(process)d %(level)-17s ' +
                     '%(context)s — %(message)s\n'
             }
@@ -74,9 +74,9 @@ module.exports = {
             Class: resolve('./core/layout/colored'),
             record: 'verbose',
             kwargs: {
-                dateFormat: '%d/%b/%Y:%H:%M:%S %z',
+                dateFormat: '%H:%M:%S.%L',
                 template: '\x1B[90m[%(date)s]\x1B[0m %(process)d %(level)-17s ' +
-                    '%(filename)s:%(line)d:%(column)d  %(context)s — %(message)s\n'
+                    '%(module)s:%(line)d:%(column)d  %(context)s — %(message)s\n'
             }
         }
     },
