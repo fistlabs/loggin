@@ -3,6 +3,9 @@
 'use strict';
 
 var assert = require('assert');
+var path = require('path');
+var filename = require('../core/util/main');
+var dirname = path.dirname(filename);
 
 describe('core/record/context', function () {
     var Record = require('../core/record/verbose');
@@ -18,7 +21,7 @@ describe('core/record/context', function () {
             assert.deepEqual(vars.message, ['Hi %s!', 'all']);
             assert.strictEqual(vars.process, process.pid);
             assert.strictEqual(typeof vars.filename, 'string');
-            assert.ok(vars.callsite);
+            assert.strictEqual(vars.module, path.relative(dirname, vars.filename));
             assert.strictEqual(typeof vars.line, 'number');
             assert.strictEqual(typeof vars.column, 'number');
         });

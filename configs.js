@@ -76,7 +76,7 @@ module.exports = {
             kwargs: {
                 dateFormat: '%d/%b/%Y:%H:%M:%S %z',
                 template: '\x1B[90m[%(date)s]\x1B[0m %(process)d %(level)-17s ' +
-                    '%(filename)s:%(line)d:%(column)d  %(context)s — %(message)s\n'
+                    '%(module)s:%(line)d:%(column)d  %(context)s — %(message)s\n'
             }
         }
     },

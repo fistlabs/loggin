@@ -209,7 +209,7 @@ logging.conf({
 There are some built-in Record classes
 
 * ```loggin/core/record/regular``` - produces ```date```, ```context```, ```message``` and ```level``` variables.
-* ```loggin/core/record/verbose``` - inherits from ```regular```. Also produces ```filename```, ```line``` and ```column``` variables.
+* ```loggin/core/record/verbose``` - inherits from ```regular```. Also produces ```module```, ```filename```, ```line``` and ```column``` variables.
 
 You can create your own record class and specify it in config.
 ```js
@@ -283,7 +283,8 @@ Configuration like this let you to write ```LOG``` and less records to stdout an
   * ```Number line``` - log calling line number
   * ```Number column``` - log calling column number
   * ```String filename``` - log caller absolute filename
- 
+  * ```String module``` - log caller filename relative from main module dirname
+
 ###Layouts
 * ```cleanRegular``` - the layout, ideal for logging regular messages into file
 * ```cleanVerbose``` - may be pretty to log warnings and errors into file, including caller data
