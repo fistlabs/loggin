@@ -7,8 +7,10 @@ var assert = require('assert');
 var f = require('util').format;
 
 describe('loggin', function () {
-    var loggin = require('../loggin');
+    var Logger = require('../core/logger');
     var Logging = require('../core/logging');
+
+    var loggin = require('../loggin');
 
     it('Should be an instance on Logging', function () {
         assert.ok(loggin instanceof Logging);
@@ -57,4 +59,26 @@ describe('loggin', function () {
         });
     });
 
+    describe('loggin.getLogger()', function () {
+        it('Should have getLogger function', function () {
+            assert.ok(typeof loggin.getLogger, 'function');
+        });
+
+        it('Should create named logger', function () {
+            var logger = loggin.getLogger('foo');
+            assert.ok(loggin instanceof Logger);
+            assert.ok(loggin instanceof Logging);
+            assert.strictEqual(logger.context, 'foo');
+        });
+
+        it('Should give default name to logger if no specified', function () {
+            var logger = loggin.getLogger();
+            assert.strictEqual(logger.context, 'default');
+        });
+
+        it('Should cache loggers', function () {
+            var logger = loggin.getLogger('foo');
+            assert.strictEqual(logger, loggin.getLogger('foo'));
+        });
+    });
 });

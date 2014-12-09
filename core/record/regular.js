@@ -24,6 +24,7 @@ Record.prototype.constructor = Record;
 Record.prototype.create = function (context, level, caller, args) {
 
     return {
+        process: process.pid,
         context: context,
         level: level,
         date: new Date(),

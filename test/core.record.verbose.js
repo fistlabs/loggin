@@ -12,17 +12,15 @@ describe('core/record/context', function () {
         it('Should return expected object', function should() {
             var vars = record.create('foo', 'LOG', should, ['Hi %s!', 'all']);
 
-            assert.deepEqual(vars, {
-                context: 'foo',
-                level: 'LOG',
-                date: vars.date,
-                message: ['Hi %s!', 'all'],
-                filename: vars.filename,
-                module: vars.module,
-                callsite: vars.callsite,
-                line: vars.line,
-                column: vars.column
-            });
+            assert.strictEqual(vars.context, 'foo');
+            assert.strictEqual(vars.level, 'LOG');
+            assert.ok(vars.date instanceof Date);
+            assert.deepEqual(vars.message, ['Hi %s!', 'all']);
+            assert.strictEqual(vars.process, process.pid);
+            assert.strictEqual(typeof vars.filename, 'string');
+            assert.ok(vars.callsite);
+            assert.strictEqual(typeof vars.line, 'number');
+            assert.strictEqual(typeof vars.column, 'number');
         });
     });
 });

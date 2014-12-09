@@ -48,7 +48,8 @@ module.exports = {
             record: 'regular',
             kwargs: {
                 dateFormat: '%d/%b/%Y:%H:%M:%S %z',
-                template: '[%(date)s] %(context)s: %(level)s — %(message)s\n'
+                template: '[%(date)s] %(process)d %(level)-8s ' +
+                    '%(context)s — %(message)s\n'
             }
         },
         cleanVerbose: {
@@ -56,7 +57,8 @@ module.exports = {
             record: 'verbose',
             kwargs: {
                 dateFormat: '%d/%b/%Y:%H:%M:%S %z',
-                template: '[%(date)s] %(context)s: %(filename)s:%(line)d:%(column)d %(level)s — %(message)s\n'
+                template: '[%(date)s] %(process)d %(level)-8s ' +
+                    '%(filename)s:%(line)d:%(column)d %(context)s — %(message)s\n'
             }
         },
         colorRegular: {
@@ -64,7 +66,8 @@ module.exports = {
             record: 'regular',
             kwargs: {
                 dateFormat: '%d/%b/%Y:%H:%M:%S %z',
-                template: '\x1B[90m[%(date)s]\x1B[0m %(context)s: %(level)s — %(message)s\n'
+                template: '\x1B[90m[%(date)s]\x1B[0m %(process)d %(level)-17s ' +
+                    '%(context)s — %(message)s\n'
             }
         },
         colorVerbose: {
@@ -72,8 +75,8 @@ module.exports = {
             record: 'verbose',
             kwargs: {
                 dateFormat: '%d/%b/%Y:%H:%M:%S %z',
-                template: '\x1B[90m[%(date)s]\x1B[0m ' +
-                    '%(context)s: %(module)s:%(line)d:%(column)d %(level)s — %(message)s\n'
+                template: '\x1B[90m[%(date)s]\x1B[0m %(process)d %(level)-17s ' +
+                    '%(filename)s:%(line)d:%(column)d  %(context)s — %(message)s\n'
             }
         }
     },

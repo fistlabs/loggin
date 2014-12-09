@@ -41,19 +41,15 @@ describe('core/logging', function () {
         this.spy.push(message);
     };
 
-    describe('logging.getLogger()', function () {
-        it('Should return logger with global context', function () {
+    describe('new Logging()', function () {
+        it('Should be an instance of Logging', function () {
             var logging = new Logging();
-            var logger = logging.getLogger();
-            assert.ok(logger instanceof Logger);
-            assert.strictEqual(String(logger.context), String(process.pid));
+            assert.ok(logging instanceof Logging);
         });
 
-        it('Should return logger with specified context', function () {
+        it('Should be an instance of Logger', function () {
             var logging = new Logging();
-            var logger = logging.getLogger('foo');
-            assert.ok(logger instanceof Logger);
-            assert.deepEqual(String(logger.context).split(/\W+/), [String(process.pid), 'foo']);
+            assert.ok(logging instanceof Logger);
         });
     });
 
@@ -67,13 +63,11 @@ describe('core/logging', function () {
         });
 
         it('Should handle record if level match only', function () {
-            var logging = new Logging();
-            logging.logLevel = 'INFO';
+            var logger = new Logging();
+            logger.logLevel = 'INFO';
             var handler = new SpyHandler(new SpyLayout());
-            logging.configs.enabled = ['foo'];
-            logging.handlers.foo = handler;
-
-            var logger = logging.getLogger();
+            logger.configs.enabled = ['foo'];
+            logger.handlers.foo = handler;
 
             assert.ok(!logger.debug('1'));
             assert.ok(logger.info('2'));
@@ -84,12 +78,11 @@ describe('core/logging', function () {
         });
 
         it('Should ignore handlers which minLevel higher than record level', function () {
-            var logging = new Logging();
-            var logger = logging.getLogger();
+            var logger = new Logging();
             var spy = [];
-            logging.logLevel = 'INFO';
-            logging.configs.enabled = ['foo'];
-            logging.handlers.foo = {
+            logger.logLevel = 'INFO';
+            logger.configs.enabled = ['foo'];
+            logger.handlers.foo = {
                 minLevel: 'LOG',
                 handle: function (message) {
                     spy.push(message);
@@ -365,6 +358,6 @@ describe('core/logging', function () {
     it('Should not log anything if logLevel unknown', function () {
         var logging = new Logging();
         logging.logLevel = 'FOOBAR';
-        assert.ok(!logging.getLogger().internal());
+        assert.ok(!logging.internal());
     });
 });

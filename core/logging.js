@@ -9,8 +9,10 @@ var duck = require('./util/duck');
 
 /**
  * @class Logging
+ * @extends Logger
  * */
-function Logging() {
+function Logging(name) {
+    Logger.call(this, this, name);
 
     /**
      * @public
@@ -67,6 +69,8 @@ function Logging() {
     this.handlers = {};
 }
 
+Logging.prototype = Object.create(Logger.prototype);
+
 /**
  * @public
  * @memberOf {Logging}
@@ -118,25 +122,6 @@ Logging.prototype.conf = function (configs) {
     }
 
     return this;
-};
-
-/**
- * @public
- * @memberOf {Logging}
- * @method
- *
- * @param {String} [context]
- *
- * @returns {Logger}
- * */
-Logging.prototype.getLogger = function (context) {
-    var logger = new Logger(this, process.pid);
-
-    if (context) {
-        return logger.bind(context);
-    }
-
-    return logger;
 };
 
 /**

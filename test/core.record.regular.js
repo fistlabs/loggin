@@ -13,12 +13,11 @@ describe('core/record/regular', function () {
 
             var vars = record.create('foo', 'LOG', should, ['Hi %s!', 'all']);
 
-            assert.deepEqual(vars, {
-                context: 'foo',
-                level: 'LOG',
-                date: vars.date,
-                message: ['Hi %s!', 'all']
-            });
+            assert.strictEqual(vars.context, 'foo');
+            assert.strictEqual(vars.level, 'LOG');
+            assert.ok(vars.date instanceof Date);
+            assert.deepEqual(vars.message, ['Hi %s!', 'all']);
+            assert.strictEqual(vars.process, process.pid);
         });
     });
 });
