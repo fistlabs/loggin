@@ -47,13 +47,12 @@ console.log('%s - %s', request.id, 'Some happened');
 You should add request id to your any log message to then find some information about this request later.
 With loggin you should not. You can create a logger that context is bound to request id.
 ```js
-//  global context logger (process)
-var globalLogger = logging.getLogger();
+var rootLogger = logging.getLogger();
 
 ***
 
-//  request context
-var logger = globalLogger.bind(request.id);
+//  bind request context
+var logger = rootLogger.bind(request.id);
 
 logger.log('The data, bound to request id');
 ```
@@ -63,11 +62,24 @@ Your record factory has access to logging context, and layout can represent it i
 ##API
 ###```logging```
 
-####```Logger logging.getLogger()```
-Creates a new logger
+####```Logging logging.getLogger([name="default"])```
+Creates a new root logger
 
 ```js
 var logger = logging.getLogger();
+```
+
+```logging``` will memorize ```getLogger``` calls by ```name``` argument.
+
+```js
+assert.strictEqual(logging.getLogger('foo'), logging.getLogger('foo'));
+```
+
+It would also be useful to know that ```loggin``` package exporting object is an instance of ```Logging``` with name ```"default"```. It is default root logger.
+```js
+var logging = require('loggin');
+
+assert.strictEqual(logging, logging.getLogger());   // done
 ```
 
 ####```String logging.logLevel```
@@ -101,10 +113,11 @@ logger.log('Hello %s', 'world');
 ```internal```, ```debug```, ```note```, ```info```, ```warn```, ```error```, ```fatal``` methods also available
 
 ####```logger.bind(String context)```
-Creates new context logger
+Creates new context lightweight logger
+
 ```js
-var globalLogger = logging.getLogger();
-var contextLogger = globalLogger.bind('<some context>');
+var rootLogger = logging.getLogger('<e.g. application name>');
+var contextLogger = rootLogger.bind('<some context>');
 ```
 
 ####```logger.setup(Object some)```
@@ -196,7 +209,7 @@ logging.conf({
 There are some built-in Record classes
 
 * ```loggin/core/record/regular``` - produces ```date```, ```context```, ```message``` and ```level``` variables.
-* ```loggin/core/record/verbose``` - inherits from ```regular```. Also produces ```module```, ```filename```, ```line``` and ```column``` variables.
+* ```loggin/core/record/verbose``` - inherits from ```regular```. Also produces ```filename```, ```line``` and ```column``` variables.
 
 You can create your own record class and specify it in config.
 ```js
@@ -270,13 +283,12 @@ Configuration like this let you to write ```LOG``` and less records to stdout an
   * ```Number line``` - log calling line number
   * ```Number column``` - log calling column number
   * ```String filename``` - log caller absolute filename
-  * ```String module``` - log caller filename relative from main module dirname
  
 ###Layouts
 * ```cleanRegular``` - the layout, ideal for logging regular messages into file
-* ```cleanVerbose``` - may be pretty to log warngings and errors into file, including caller data
+* ```cleanVerbose``` - may be pretty to log warnings and errors into file, including caller data
 * ```colorRegular``` - ideal for logging regular messages to terminal
-* ```colorVerbose``` - good for logging errors and warngins to terminal, including caller data
+* ```colorVerbose``` - good for logging errors and warnings to terminal, including caller data
 
 ###Handlers
 * ```stdoutColorRegular``` - writes colored compact entries which level less then ```WARNING``` to standard output (dev)

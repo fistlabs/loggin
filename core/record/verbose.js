@@ -1,8 +1,6 @@
 'use strict';
 
 var Regular = /** @type Regular */ require('./regular');
-
-var main = require('../util/main');
 var path = require('path');
 
 /**
@@ -65,7 +63,6 @@ Verbose.prototype.create = function (context, level, caller, args) {
     record.line = callsite.getLineNumber();
     record.column = callsite.getColumnNumber();
     record.filename = path.resolve(callsite.getFileName());
-    record.module = path.relative(main.dirname, record.filename);
 
     return record;
 };
