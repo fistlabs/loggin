@@ -48,7 +48,7 @@ module.exports = {
             record: 'regular',
             kwargs: {
                 dateFormat: '%d/%b/%Y:%H:%M:%S %z',
-                template: '[%(date)s] %(process)d %(level)-8s ' +
+                template: '[%(date)s] %(process)5s %(level)-8s ' +
                     '%(context)s — %(message)s\n'
             }
         },
@@ -57,7 +57,7 @@ module.exports = {
             record: 'verbose',
             kwargs: {
                 dateFormat: '%d/%b/%Y:%H:%M:%S %z',
-                template: '[%(date)s] %(process)d %(level)-8s ' +
+                template: '[%(date)s] %(process)5s %(level)-8s ' +
                     '%(filename)s:%(line)d:%(column)d %(context)s — %(message)s\n'
             }
         },
@@ -66,7 +66,7 @@ module.exports = {
             record: 'regular',
             kwargs: {
                 dateFormat: '%H:%M:%S.%L',
-                template: '\x1B[90m[%(date)s]\x1B[0m %(process)d %(level)-17s ' +
+                template: '\x1B[90m[%(date)s]\x1B[0m %(process)5s %(level)-17s ' +
                     '%(context)s — %(message)s\n'
             }
         },
@@ -75,8 +75,8 @@ module.exports = {
             record: 'verbose',
             kwargs: {
                 dateFormat: '%H:%M:%S.%L',
-                template: '\x1B[90m[%(date)s]\x1B[0m %(process)d %(level)-17s ' +
-                    '%(module)s:%(line)d:%(column)d  %(context)s — %(message)s\n'
+                template: '\x1B[90m[%(date)s]\x1B[0m %(process)5s %(level)-17s ' +
+                    '%(module)s:%(line)d:%(column)d %(context)s — %(message)s\n'
             }
         }
     },
