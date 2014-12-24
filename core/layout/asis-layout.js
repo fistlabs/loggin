@@ -26,7 +26,7 @@ function AsIsLayout(record, params) {
      * @property
      * @type {Object}
      * */
-    this.params = params = Object(params);
+    this.params = Object(params);
 
     /**
      * @public
