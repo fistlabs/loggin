@@ -1,5 +1,4 @@
 'use strict';
-//  TODO separate unit tests
 
 var strf = require('../util/strf');
 
@@ -9,11 +8,7 @@ var strf = require('../util/strf');
  *      layouts: {
  *          myLayout: {
  *              Class: 'loggin/core/layout/strf-layout',
- *              record: 'regular', //   or any other, but `Array message` variables is required
- *              kwargs: {
- *                  template: '%(date)s - %(message)s',  //  use any variables
- *                      //  that provided by record
- *              }
+ *              record: 'regular' //   or any other, but `Array message` variables is required
  *          }
  *      }
  *  });
@@ -40,14 +35,6 @@ function AsIsLayout(record, params) {
      * @type {Object}
      * */
     this.record = record;
-
-    /**
-     * @public
-     * @memberOf {AsIsLayout}
-     * @property
-     * @type {String}
-     * */
-    this.template = params.template;
 }
 
 /**

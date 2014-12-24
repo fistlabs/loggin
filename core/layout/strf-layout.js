@@ -1,5 +1,4 @@
 'use strict';
-//  TODO separate unit tests
 
 var AsIsLayout = /** @type AsIsLayout */ require('./asis-layout');
 
@@ -28,6 +27,14 @@ var strf = require('../util/strf');
  * */
 function StrfLayout(record, params) {
     AsIsLayout.call(this, record, params);
+
+    /**
+     * @public
+     * @memberOf {StrfLayout}
+     * @property
+     * @type {String}
+     * */
+    this.template = this.params.template;
 }
 
 StrfLayout.prototype = Object.create(AsIsLayout.prototype);
