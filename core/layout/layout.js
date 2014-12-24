@@ -58,7 +58,7 @@ Layout.prototype.constructor = Layout;
  *
  * @param {Object} record
  *
- * @returns {Object}
+ * @returns {String}
  * */
 Layout.prototype._formatRecord = function (record) {
     var i;
@@ -74,6 +74,15 @@ Layout.prototype._formatRecord = function (record) {
     return results.join('');
 };
 
+/**
+ * @protected
+ * @memberOf {Layout}
+ * @method
+ *
+ * @param {Object} record
+ *
+ * @returns {Object}
+ * */
 Layout.prototype._updateRecordAttrs = function (record) {
     record = StrfLayout.prototype._updateRecordAttrs.call(this, record);
     record.date = strftime(this.dateFormat, record.date);

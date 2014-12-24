@@ -14,7 +14,7 @@ var strf = require('../util/strf');
  *              record: 'regular', //   or any other, but `Array message` variables is required
  *              kwargs: {
  *                  template: '%(date)s - %(message)s',  //  use any variables
- *                      //  that provided by record, special case is```date```
+ *                      //  that provided by record
  *              }
  *          }
  *      }

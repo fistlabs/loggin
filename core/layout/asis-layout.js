@@ -12,7 +12,7 @@ var strf = require('../util/strf');
  *              record: 'regular', //   or any other, but `Array message` variables is required
  *              kwargs: {
  *                  template: '%(date)s - %(message)s',  //  use any variables
- *                      //  that provided by record, special case is```date```
+ *                      //  that provided by record
  *              }
  *          }
  *      }
@@ -66,7 +66,7 @@ AsIsLayout.prototype.constructor = AsIsLayout;
  *
  * @param {Object} record
  *
- * @returns {String}
+ * @returns {*}
  * */
 AsIsLayout.prototype.format = function (record) {
     return this._formatRecord(this._updateRecordAttrs(record));
