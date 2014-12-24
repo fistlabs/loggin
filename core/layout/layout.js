@@ -2,6 +2,8 @@
 
 var EOL = require('os').EOL;
 
+var StrfLayout = /** @type StrfLayout*/ require('./strf-layout');
+
 var strf = require('../util/strf');
 var strftime = require('fast-strftime');
 
@@ -22,37 +24,23 @@ var strftime = require('fast-strftime');
  *  });
  *
  * @class Layout
+ * @extends StrfLayout
  *
  * @param {Object} record
  * @param {Object} params
  * */
 function Layout(record, params) {
-    params = Object(params);
-
-    /**
-     * @public
-     * @memberOf {Layout}
-     * @property
-     * @type {Object}
-     * */
-    this.record = record;
-
+    StrfLayout.call(this, record, params);
     /**
      * @public
      * @memberOf {Layout}
      * @property
      * @type {String}
      * */
-    this.template = params.template;
-
-    /**
-     * @public
-     * @memberOf {Layout}
-     * @property
-     * @type {String}
-     * */
-    this.dateFormat = params.dateFormat;
+    this.dateFormat = this.params.dateFormat;
 }
+
+Layout.prototype = Object.create(StrfLayout.prototype);
 
 /**
  * @public
@@ -64,33 +52,6 @@ function Layout(record, params) {
 Layout.prototype.constructor = Layout;
 
 /**
- * @public
- * @memberOf {Layout}
- * @method
- *
- * @param {Object} record
- *
- * @returns {String}
- * */
-Layout.prototype.format = function (record) {
-    var i;
-    var l;
-    var message;
-    var results;
-
-    record = this._formatRecord(record);
-    message = record.message.split(EOL);
-    results = new Array(message.length);
-
-    for (i = 0, l = message.length; i < l; i += 1) {
-        record.message = message[i];
-        results[i] = strf.format([this.template, record]);
-    }
-
-    return results.join('');
-};
-
-/**
  * @protected
  * @memberOf {Layout}
  * @method
@@ -100,9 +61,22 @@ Layout.prototype.format = function (record) {
  * @returns {Object}
  * */
 Layout.prototype._formatRecord = function (record) {
-    record.date = strftime(this.dateFormat, record.date);
-    record.message = strf.format(record.message);
+    var i;
+    var l;
+    var message = record.message.split(EOL);
+    var results = new Array(message.length);
 
+    for (i = 0, l = message.length; i < l; i += 1) {
+        record.message = message[i];
+        results[i] = strf.format([this.template, record]);
+    }
+
+    return results.join('');
+};
+
+Layout.prototype._updateRecordAttrs = function (record) {
+    record = StrfLayout.prototype._updateRecordAttrs.call(this, record);
+    record.date = strftime(this.dateFormat, record.date);
     return record;
 };
 

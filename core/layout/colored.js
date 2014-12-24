@@ -57,15 +57,13 @@ var colorByLevel = {
 function Colored(record, params) {
     Layout.call(this, record, params);
 
-    params = Object(params);
-
     /**
      * @public
      * @memberOf {Colored}
      * @property
      * @type {Object}
      * */
-    this.colors = Object(params.colors);
+    this.colors = Object(this.params.colors);
 }
 
 Colored.prototype = Object.create(Layout.prototype);
@@ -81,8 +79,8 @@ Colored.prototype.constructor = Colored;
  *
  * @returns {*}
  * */
-Colored.prototype._formatRecord = function (record) {
-    record = Layout.prototype._formatRecord.call(this, record);
+Colored.prototype._updateRecordAttrs = function (record) {
+    record = Layout.prototype._updateRecordAttrs.call(this, record);
     record.level = Colored.stylize(colorByLevel[record.level], record.level);
 
     return record;
