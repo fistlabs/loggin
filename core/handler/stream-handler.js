@@ -14,26 +14,25 @@
  *          }
  *      }
  *  });
- * @class Handler
+ * @class StreamHandler
  *
  * @param {Object} layout
  * @param {Object} params
  * */
-function Handler(layout, params) {
+function StreamHandler(layout, params) {
+    params = Object(params);
 
     /**
      * @public
-     * @memberOf {Handler}
+     * @memberOf {StreamHandler}
      * @property
      * @type {Object}
      * */
     this.layout = layout;
 
-    params = Object(params);
-
     /**
      * @public
-     * @memberOf {Handler}
+     * @memberOf {StreamHandler}
      * @property
      * @type {String}
      * */
@@ -41,7 +40,7 @@ function Handler(layout, params) {
 
     /**
      * @public
-     * @memberOf {Handler}
+     * @memberOf {StreamHandler}
      * @property
      * @type {String}
      * */
@@ -49,7 +48,7 @@ function Handler(layout, params) {
 
     /**
      * @public
-     * @memberOf {Handler}
+     * @memberOf {StreamHandler}
      * @property
      * @type {Object}
      * */
@@ -58,21 +57,21 @@ function Handler(layout, params) {
 
 /**
  * @public
- * @memberOf {Handler}
+ * @memberOf {StreamHandler}
  * @method
  * @constructs
  * */
-Handler.prototype.constructor = Handler;
+StreamHandler.prototype.constructor = StreamHandler;
 
 /**
  * @public
- * @memberOf {Handler}
+ * @memberOf {StreamHandler}
  * @method
  *
  * @param {*} message
  * */
-Handler.prototype.handle = function (message) {
+StreamHandler.prototype.handle = function (message) {
     this.stream.write(message);
 };
 
-module.exports = Handler;
+module.exports = StreamHandler;
