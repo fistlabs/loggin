@@ -1,5 +1,7 @@
 'use strict';
 
+var NullHandler = /** @type NullHandler*/ require('./null-handler');
+
 /**
  * @usage
  *  logging.conf({
@@ -15,12 +17,13 @@
  *      }
  *  });
  * @class StreamHandler
+ * @extends NullHandler
  *
  * @param {Object} layout
  * @param {Object} params
  * */
 function StreamHandler(layout, params) {
-    params = Object(params);
+    NullHandler.call(this, layout, params);
 
     /**
      * @public
@@ -28,32 +31,10 @@ function StreamHandler(layout, params) {
      * @property
      * @type {Object}
      * */
-    this.layout = layout;
-
-    /**
-     * @public
-     * @memberOf {StreamHandler}
-     * @property
-     * @type {String}
-     * */
-    this.minLevel = params.minLevel;
-
-    /**
-     * @public
-     * @memberOf {StreamHandler}
-     * @property
-     * @type {String}
-     * */
-    this.maxLevel = params.maxLevel;
-
-    /**
-     * @public
-     * @memberOf {StreamHandler}
-     * @property
-     * @type {Object}
-     * */
-    this.stream = params.stream;
+    this.stream = this.params.stream;
 }
+
+StreamHandler.prototype = Object.create(NullHandler.prototype);
 
 /**
  * @public
