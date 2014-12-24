@@ -27,6 +27,7 @@ var strftime = require('fast-strftime');
  * @param {Object} params
  * */
 function Layout(record, params) {
+    params = Object(params);
 
     /**
      * @public
@@ -35,8 +36,6 @@ function Layout(record, params) {
      * @type {Object}
      * */
     this.record = record;
-
-    params = Object(params);
 
     /**
      * @public
