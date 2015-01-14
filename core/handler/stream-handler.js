@@ -1,5 +1,7 @@
 'use strict';
 
+var NullHandler = /** @type NullHandler*/ require('./null-handler');
+
 /**
  * @usage
  *  logging.conf({
@@ -14,65 +16,43 @@
  *          }
  *      }
  *  });
- * @class Handler
+ * @class StreamHandler
+ * @extends NullHandler
  *
  * @param {Object} layout
  * @param {Object} params
  * */
-function Handler(layout, params) {
+function StreamHandler(layout, params) {
+    NullHandler.call(this, layout, params);
 
     /**
      * @public
-     * @memberOf {Handler}
+     * @memberOf {StreamHandler}
      * @property
      * @type {Object}
      * */
-    this.layout = layout;
-
-    params = Object(params);
-
-    /**
-     * @public
-     * @memberOf {Handler}
-     * @property
-     * @type {String}
-     * */
-    this.minLevel = params.minLevel;
-
-    /**
-     * @public
-     * @memberOf {Handler}
-     * @property
-     * @type {String}
-     * */
-    this.maxLevel = params.maxLevel;
-
-    /**
-     * @public
-     * @memberOf {Handler}
-     * @property
-     * @type {Object}
-     * */
-    this.stream = params.stream;
+    this.stream = this.params.stream;
 }
+
+StreamHandler.prototype = Object.create(NullHandler.prototype);
 
 /**
  * @public
- * @memberOf {Handler}
+ * @memberOf {StreamHandler}
  * @method
  * @constructs
  * */
-Handler.prototype.constructor = Handler;
+StreamHandler.prototype.constructor = StreamHandler;
 
 /**
  * @public
- * @memberOf {Handler}
+ * @memberOf {StreamHandler}
  * @method
  *
  * @param {*} message
  * */
-Handler.prototype.handle = function (message) {
+StreamHandler.prototype.handle = function (message) {
     this.stream.write(message);
 };
 
-module.exports = Handler;
+module.exports = StreamHandler;

@@ -33,7 +33,7 @@ Verbose.prototype._getCallSite = function (caller) {
 
     Error.stackTraceLimit = 1;
 
-    Error.prepareStackTrace = function (stackHolder, stack) {
+    Error.prepareStackTrace = function (_, stack) {
         return stack;
     };
 
