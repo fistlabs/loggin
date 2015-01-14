@@ -1,0 +1,70 @@
+/*eslint max-nested-callbacks: 0*/
+/*global describe, it*/
+'use strict';
+
+var assert = require('assert');
+var raven = require('raven');
+
+describe('core/handler/sentry-handler', function () {
+    var Handler = require('../core/handler/sentry-handler');
+    var layout = {};
+
+    function SpyHandler(l, params) {
+        Handler.call(this, l, params);
+    }
+
+    SpyHandler.prototype = Object.create(Handler.prototype);
+
+    SpyHandler.prototype._createClient = function (dsn, options) {
+        return {
+            dsn: dsn,
+            options: options,
+            captureError: function () {}
+        };
+    };
+
+    function createHandler(params) {
+        return new SpyHandler(layout, params);
+    }
+
+    describe('handler.client', function () {
+        it('Should create raven client', function () {
+            var handler = new Handler(layout, {});
+            assert.ok(handler.client instanceof raven.Client);
+        });
+
+        it('Should create client', function () {
+            var handler = createHandler({});
+            assert.ok(handler.client);
+        });
+
+        it('Should call captureError()', function () {
+            var handler = createHandler({});
+            var spy;
+            handler.client.captureError = function (message, options) {
+                spy = {
+                    message: message,
+                    options: options
+                };
+            };
+
+            handler.handle({
+                message: 'foo',
+                level: 'DEBUG',
+                bar: 'baz'
+            });
+
+            assert.deepEqual(spy, {
+                message: 'foo',
+                options: {
+                    level: 'debug',
+                    extra: {
+                        level: 'DEBUG',
+                        bar: 'baz'
+                    }
+                }
+            });
+
+        });
+    });
+});
