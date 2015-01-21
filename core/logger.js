@@ -1,16 +1,15 @@
 'use strict';
 
-var _ = require('lodash-node');
-var recorders = {
-    internal: 'INTERNAL',
-    debug: 'DEBUG',
-    note: 'NOTE',
-    info: 'INFO',
-    log: 'LOG',
-    warn: 'WARNING',
-    error: 'ERROR',
-    fatal: 'FATAL'
-};
+var recorders = [
+    'internal',
+    'debug',
+    'note',
+    'info',
+    'log',
+    'warn',
+    'error',
+    'fatal'
+];
 
 /**
  * @class Logger
@@ -37,56 +36,191 @@ function Logger(logging, context) {
     this.logging = logging;
 }
 
-Logger.prototype = {
+/**
+ * @public
+ * @memberOf {Logger}
+ * @method
+ *
+ * @constructs
+ * */
+Logger.prototype.constructor = Logger;
 
-    /**
-     * @public
-     * @memberOf {Logger}
-     * @method
-     *
-     * @constructs
-     * */
-    constructor: Logger,
-
-    /**
-     * @public
-     * @memberOf {Logger}
-     * @method
-     *
-     * @param {String} name
-     *
-     * @returns {Logger}
-     * */
-    bind: function (name) {
-        return new Logger(this.logging, this.context + '/' + name);
-    },
-
-    /**
-     * @public
-     * @memberOf {Logger}
-     * @method
-     *
-     * @param {Object} obj
-     * */
-    setup: function (obj) {
-        _.forOwn(recorders, function (level, name) {
-            obj[name] = this[name].bind(this);
-        }, this);
-    }
+/**
+ * @public
+ * @memberOf {Logger}
+ * @method
+ *
+ * @param {String} name
+ *
+ * @returns {Logger}
+ * */
+Logger.prototype.bind = function (name) {
+    return new Logger(this.logging, this.context + '/' + name);
 };
 
-_.forOwn(recorders, function (level, name) {
+/**
+ * @public
+ * @memberOf {Logger}
+ * @method
+ *
+ * @param {Object} obj
+ * */
+Logger.prototype.setup = function (obj) {
+    recorders.forEach(function (name) {
+        obj[name] = this[name].bind(this);
+    }, this);
+};
 
-    /**
-     * @public
-     * @memberOf {Logger}
-     * @method
-     *
-     * @returns {Boolean}
-     * */
-    Logger.prototype[name] = function () {
-        return this.logging.record(this.context, level, this[name], arguments);
-    };
-});
+/**
+ * @public
+ * @memberOf {Logger}
+ * @method
+ *
+ * @returns {Boolean}
+ * */
+Logger.prototype.internal = function $Logger$prototype$internal() {
+    var argc = arguments.length;
+    var args = new Array(argc);
+    var i;
+
+    for (i = 0; i < argc; i += 1) {
+        args[i] = arguments[i];
+    }
+
+    return this.logging.record(this.context, 'INTERNAL', this.internal, args);
+};
+
+/**
+ * @public
+ * @memberOf {Logger}
+ * @method
+ *
+ * @returns {Boolean}
+ * */
+Logger.prototype.debug = function $Logger$prototype$debug() {
+    var argc = arguments.length;
+    var args = new Array(argc);
+    var i;
+
+    for (i = 0; i < argc; i += 1) {
+        args[i] = arguments[i];
+    }
+
+    return this.logging.record(this.context, 'DEBUG', this.debug, args);
+};
+
+/**
+ * @public
+ * @memberOf {Logger}
+ * @method
+ *
+ * @returns {Boolean}
+ * */
+Logger.prototype.note = function $Logger$prototype$note() {
+    var argc = arguments.length;
+    var args = new Array(argc);
+    var i;
+
+    for (i = 0; i < argc; i += 1) {
+        args[i] = arguments[i];
+    }
+
+    return this.logging.record(this.context, 'NOTE', this.note, args);
+};
+
+/**
+ * @public
+ * @memberOf {Logger}
+ * @method
+ *
+ * @returns {Boolean}
+ * */
+Logger.prototype.info = function $Logger$prototype$info() {
+    var argc = arguments.length;
+    var args = new Array(argc);
+    var i;
+
+    for (i = 0; i < argc; i += 1) {
+        args[i] = arguments[i];
+    }
+
+    return this.logging.record(this.context, 'INFO', this.info, args);
+};
+
+/**
+ * @public
+ * @memberOf {Logger}
+ * @method
+ *
+ * @returns {Boolean}
+ * */
+Logger.prototype.log = function $Logger$prototype$log() {
+    var argc = arguments.length;
+    var args = new Array(argc);
+    var i;
+
+    for (i = 0; i < argc; i += 1) {
+        args[i] = arguments[i];
+    }
+
+    return this.logging.record(this.context, 'LOG', this.log, args);
+};
+
+/**
+ * @public
+ * @memberOf {Logger}
+ * @method
+ *
+ * @returns {Boolean}
+ * */
+Logger.prototype.warn = function $Logger$prototype$warn() {
+    var argc = arguments.length;
+    var args = new Array(argc);
+    var i;
+
+    for (i = 0; i < argc; i += 1) {
+        args[i] = arguments[i];
+    }
+
+    return this.logging.record(this.context, 'WARNING', this.warn, args);
+};
+
+/**
+ * @public
+ * @memberOf {Logger}
+ * @method
+ *
+ * @returns {Boolean}
+ * */
+Logger.prototype.error = function $Logger$prototype$error() {
+    var argc = arguments.length;
+    var args = new Array(argc);
+    var i;
+
+    for (i = 0; i < argc; i += 1) {
+        args[i] = arguments[i];
+    }
+
+    return this.logging.record(this.context, 'ERROR', this.error, args);
+};
+
+/**
+ * @public
+ * @memberOf {Logger}
+ * @method
+ *
+ * @returns {Boolean}
+ * */
+Logger.prototype.fatal = function $Logger$prototype$fatal() {
+    var argc = arguments.length;
+    var args = new Array(argc);
+    var i;
+
+    for (i = 0; i < argc; i += 1) {
+        args[i] = arguments[i];
+    }
+
+    return this.logging.record(this.context, 'FATAL', this.fatal, args);
+};
 
 module.exports = Logger;

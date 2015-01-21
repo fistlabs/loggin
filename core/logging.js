@@ -12,6 +12,8 @@ var duck = require('./util/duck');
  * @extends Logger
  * */
 function Logging(name) {
+    var logLevel = void 0;
+
     Logger.call(this, this, name);
 
     /**
@@ -67,6 +69,29 @@ function Logging(name) {
      * @type {Object}
      * */
     this.handlers = {};
+
+    /**
+     * @public
+     * @memberOf {Logging}
+     * @property
+     * @type {Object}
+     * */
+    this.enabledLevels = {};
+
+    Object.defineProperty(this, 'logLevel', {
+        get: function () {
+            return logLevel;
+        },
+        /*@this*/
+        set: function (level) {
+            logLevel = level;
+            _.forOwn(this.levels, function (value, levelName) {
+                this.enabledLevels[levelName] = value >= this.levels[this.logLevel];
+            }, this);
+        }
+    });
+
+    this.logLevel = logLevel;
 }
 
 Logging.prototype = Object.create(Logger.prototype);
@@ -143,32 +168,30 @@ Logging.prototype.record = function (context, level, caller, args) {
     var l;
     var layout;
     var levels = this.levels;
-    var logLevel = this.logLevel;
     var curLevel = levels[level];
     var record;
 
-    //  support NaN curLevel as disabled logger
-    if (curLevel >= levels[logLevel]) {
-        enabled = this.configs.enabled;
-
-        for (i = 0, l = enabled.length; i < l; i += 1) {
-            handler = this.handlers[enabled[i]];
-
-            //  support NaN handler.(min|max)Level
-            if (curLevel < levels[handler.minLevel] || levels[handler.maxLevel] < curLevel) {
-                continue;
-            }
-
-            layout = handler.layout;
-            record = layout.record;
-
-            handler.handle(layout.format(record.create(context, level, caller, args)));
-        }
-
-        return true;
+    if (!this.enabledLevels[level]) {
+        return false;
     }
 
-    return false;
+    enabled = this.configs.enabled;
+
+    for (i = 0, l = enabled.length; i < l; i += 1) {
+        handler = this.handlers[enabled[i]];
+
+        //  support NaN handler.(min|max)Level
+        if (curLevel < levels[handler.minLevel] || levels[handler.maxLevel] < curLevel) {
+            continue;
+        }
+
+        layout = handler.layout;
+        record = layout.record;
+
+        handler.handle(layout.format(record.create(context, level, caller, args)));
+    }
+
+    return true;
 };
 
 /**

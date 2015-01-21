@@ -53,6 +53,81 @@ describe('core/logging', function () {
         });
     });
 
+    describe('logging.enabledLevels', function () {
+        it('Should have all disabled by default', function () {
+            var logging = new Logging();
+            var enabledLevels = logging.enabledLevels;
+            assert.ok(!enabledLevels.INTERNAL);
+            assert.ok(!enabledLevels.DEBUG);
+            assert.ok(!enabledLevels.NOTE);
+            assert.ok(!enabledLevels.INFO);
+            assert.ok(!enabledLevels.LOG);
+            assert.ok(!enabledLevels.WARNING);
+            assert.ok(!enabledLevels.ERROR);
+            assert.ok(!enabledLevels.FATAL);
+        });
+
+        it('Should rebuild enabledLevels by setting logLevel', function () {
+            var logging = new Logging();
+            var enabledLevels = logging.enabledLevels;
+
+            logging.logLevel = 'INTERNAL';
+
+            assert.ok(enabledLevels.INTERNAL);
+            assert.ok(enabledLevels.DEBUG);
+            assert.ok(enabledLevels.NOTE);
+            assert.ok(enabledLevels.INFO);
+            assert.ok(enabledLevels.LOG);
+            assert.ok(enabledLevels.WARNING);
+            assert.ok(enabledLevels.ERROR);
+            assert.ok(enabledLevels.FATAL);
+
+            logging.logLevel = 'DEBUG';
+
+            assert.ok(!enabledLevels.INTERNAL);
+            assert.ok(enabledLevels.DEBUG);
+            assert.ok(enabledLevels.NOTE);
+            assert.ok(enabledLevels.INFO);
+            assert.ok(enabledLevels.LOG);
+            assert.ok(enabledLevels.WARNING);
+            assert.ok(enabledLevels.ERROR);
+            assert.ok(enabledLevels.FATAL);
+
+            logging.logLevel = 'LOG';
+
+            assert.ok(!enabledLevels.INTERNAL);
+            assert.ok(!enabledLevels.DEBUG);
+            assert.ok(!enabledLevels.NOTE);
+            assert.ok(!enabledLevels.INFO);
+            assert.ok(enabledLevels.LOG);
+            assert.ok(enabledLevels.WARNING);
+            assert.ok(enabledLevels.ERROR);
+            assert.ok(enabledLevels.FATAL);
+
+            logging.logLevel = 'FATAL';
+
+            assert.ok(!enabledLevels.INTERNAL);
+            assert.ok(!enabledLevels.DEBUG);
+            assert.ok(!enabledLevels.NOTE);
+            assert.ok(!enabledLevels.INFO);
+            assert.ok(!enabledLevels.LOG);
+            assert.ok(!enabledLevels.WARNING);
+            assert.ok(!enabledLevels.ERROR);
+            assert.ok(enabledLevels.FATAL);
+
+            logging.logLevel = 'SILENT';
+
+            assert.ok(!enabledLevels.INTERNAL);
+            assert.ok(!enabledLevels.DEBUG);
+            assert.ok(!enabledLevels.NOTE);
+            assert.ok(!enabledLevels.INFO);
+            assert.ok(!enabledLevels.LOG);
+            assert.ok(!enabledLevels.WARNING);
+            assert.ok(!enabledLevels.ERROR);
+            assert.ok(!enabledLevels.FATAL);
+        });
+    });
+
     describe('logging.record', function () {
 
         it('Should return level match result', function f() {
