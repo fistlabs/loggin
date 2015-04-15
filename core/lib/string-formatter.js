@@ -11,12 +11,12 @@ var get = require('obus').get;
 function StringFormatter() {
 
     /**
-     * @public
+     * @private
      * @memberOf {StringFormatter}
      * @property
      * @type {Object}
      * */
-    this.cache = {};
+    this._cache = {};
 
     /**
      * @public
@@ -24,7 +24,7 @@ function StringFormatter() {
      * @property
      * @type {Object}
      * */
-    this.types = {};
+    this._types = {};
 }
 
 StringFormatter.prototype.constructor = StringFormatter;
@@ -34,49 +34,17 @@ StringFormatter.prototype.constructor = StringFormatter;
  * @memberOf {StringFormatter}
  * @method
  *
- * @param {String} s
+ * @param {Array} sign
+ * @param {Function} inspect
  *
- * @returns {Object}
+ * @returns {String}
  * */
-StringFormatter.prototype.parse = function (s) {
-    if (!hasProperty.call(this.cache, s)) {
-        this.cache[s] = this.parsePattern(s);
+StringFormatter.prototype.formatSign = function (sign, inspect) {
+    if (typeof sign[0] === 'string') {
+        return this._formatPattern(sign[0], sign, 1, inspect);
     }
 
-    return this.cache[s];
-};
-
-/**
- * @private
- * @memberOf {StringFormatter}
- * @method
- *
- * @param {String} s
- *
- * @returns {Array}
- * */
-StringFormatter.prototype.parsePattern = function (s) {
-    var match;
-    var parts = [];
-
-    /*eslint no-cond-assign: 0*/
-    while (match = R_TOKENS.exec(s)) {
-        s = s.substr(match[0].length);
-
-        if (!match[5]) {
-            parts[parts.length] = match[6] || match[7];
-            continue;
-        }
-
-        if (typeof this.types[match[5]] !== 'function') {
-            parts[parts.length] = match[0];
-            continue;
-        }
-
-        parts[parts.length] = [match[5], match[1], match[2], match[3], match[4], match[0]];
-    }
-
-    return parts;
+    return this._inspectArgs(sign, 0, 0, '', inspect);
 };
 
 /**
@@ -90,12 +58,62 @@ StringFormatter.prototype.parsePattern = function (s) {
  * @returns {StringFormatter}
  * */
 StringFormatter.prototype.addType = function (type, func) {
-    this.types[type] = func;
+    this._types[type] = func;
     return this;
 };
 
 /**
- * @public
+ * @private
+ * @memberOf {StringFormatter}
+ * @method
+ *
+ * @param {String} s
+ *
+ * @returns {Object}
+ * */
+StringFormatter.prototype._parse = function (s) {
+    if (!hasProperty.call(this._cache, s)) {
+        this._cache[s] = this._parsePattern(s);
+    }
+
+    return this._cache[s];
+};
+
+/**
+ * @private
+ * @memberOf {StringFormatter}
+ * @method
+ *
+ * @param {String} s
+ *
+ * @returns {Array}
+ * */
+StringFormatter.prototype._parsePattern = function (s) {
+    var match;
+    var parts = [];
+
+    /*eslint no-cond-assign: 0*/
+    while (match = R_TOKENS.exec(s)) {
+        s = s.substr(match[0].length);
+
+        if (!match[5]) {
+            parts[parts.length] = match[6] || match[7];
+            continue;
+        }
+
+        if (typeof this._types[match[5]] !== 'function') {
+            parts[parts.length] = match[0];
+            continue;
+        }
+
+        parts[parts.length] = [match[5], match[1], match[2], match[3], match[4], match[0]];
+    }
+
+    return parts;
+};
+
+/**
+ * @private
  * @memberOf {StringFormatter}
  * @method
  *
@@ -106,14 +124,14 @@ StringFormatter.prototype.addType = function (type, func) {
  *
  * @returns {String}
  * */
-StringFormatter.prototype.formatPattern = function (patternString, args, ofs, inspect) {
+StringFormatter.prototype._formatPattern = function (patternString, args, ofs, inspect) {
     var i;
     var l;
     var part;
     var s = '';
     var value;
     var pos = Math.max(0, ofs);
-    var parts = this.parse(patternString);
+    var parts = this._parse(patternString);
     var usesKwargs = false;
 
     for (i = 0, l = parts.length; i < l; i += 1) {
@@ -136,32 +154,14 @@ StringFormatter.prototype.formatPattern = function (patternString, args, ofs, in
             value = value();
         }
 
-        s += this.types[part[0]](value, part[2], part[3], part[4]);
+        s += this._types[part[0]](value, part[2], part[3], part[4]);
     }
 
-    return s + this.inspectArgs(args, pos, Number(usesKwargs), ' ', inspect);
+    return s + this._inspectArgs(args, pos, Number(usesKwargs), ' ', inspect);
 };
 
 /**
- * @public
- * @memberOf {StringFormatter}
- * @method
- *
- * @param {Array} sign
- * @param {Function} inspect
- *
- * @returns {String}
- * */
-StringFormatter.prototype.formatSign = function (sign, inspect) {
-    if (typeof sign[0] === 'string') {
-        return this.formatPattern(sign[0], sign, 1, inspect);
-    }
-
-    return this.inspectArgs(sign, 0, 0, '', inspect);
-};
-
-/**
- * @public
+ * @private
  * @memberOf {StringFormatter}
  * @method
  *
@@ -173,7 +173,7 @@ StringFormatter.prototype.formatSign = function (sign, inspect) {
  *
  * @returns {String}
  * */
-StringFormatter.prototype.inspectArgs = function (args, ofsL, ofsR, s, inspect) {
+StringFormatter.prototype._inspectArgs = function (args, ofsL, ofsR, s, inspect) {
     var l = args.length - ofsR;
 
     if (l - ofsL < 1) {

@@ -8,7 +8,7 @@ describe('core/util/strf', function () {
     var strf = require('../core/util/strf');
 
     describe('%s', function () {
-        var s = strf.types.s.bind(strf.types);
+        var s = strf._types.s.bind(strf._types);
 
         it('Should format value as string', function () {
             assert.strictEqual(s('foo'), 'foo');
@@ -29,7 +29,7 @@ describe('core/util/strf', function () {
     });
 
     describe('%j', function () {
-        var j = strf.types.j.bind(strf.types);
+        var j = strf._types.j.bind(strf._types);
 
         it('Should stringify JSON', function () {
             assert.strictEqual(j({}), '{}');
@@ -47,7 +47,7 @@ describe('core/util/strf', function () {
     });
 
     describe('%d', function () {
-        var d = strf.types.d.bind(strf.types);
+        var d = strf._types.d.bind(strf._types);
 
         it('Should format as Number', function () {
             assert.strictEqual(d('5'), '5');
