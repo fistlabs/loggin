@@ -27,12 +27,12 @@ RavenLayout.prototype.constructor = RavenLayout;
  * */
 RavenLayout.prototype._updateRecordAttrs = function (vars) {
     var message = vars.message;
-    var i;
-    var l = message.length;
+    var i = 0;
+    var l = 0;
     var newVars = {};
 
     if (message[0] instanceof Error) {
-        for (i = 1; i < l; i += 1) {
+        for (i = 1, l = message.length; i < l; i += 1) {
             _.extend(newVars, message[i]);
         }
 
