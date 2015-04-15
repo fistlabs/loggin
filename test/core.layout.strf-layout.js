@@ -3,7 +3,7 @@
 'use strict';
 
 var assert = require('assert');
-// var util = require('util');
+var util = require('util');
 
 describe('core/layout/strf-layout', function () {
     var Layout = require('../core/layout/strf-layout');
@@ -28,6 +28,16 @@ describe('core/layout/strf-layout', function () {
                 message: ['foo %s', 'bar']
             };
             assert.strictEqual(layout.format(vars), 'foo bar');
+        });
+
+        it('Should support inspect extra args', function () {
+            var layout = new Layout(record, {
+                template: '42'
+            });
+            var vars = {
+                message: ['foo', 'bar']
+            };
+            assert.strictEqual(layout.format(vars), '42 ' + util.inspect(vars));
         });
     });
 });

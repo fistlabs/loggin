@@ -3,6 +3,7 @@
 var AsIsLayout = /** @type AsIsLayout */ require('./asis-layout');
 
 var strf = require('../util/strf');
+var util = require('util');
 
 /**
  * @usage
@@ -58,7 +59,7 @@ StrfLayout.prototype.constructor = StrfLayout;
  * @returns {*}
  * */
 StrfLayout.prototype._formatRecord = function (record) {
-    return strf.formatSign([this.template, record]);
+    return strf.formatSign([this.template, record], util.inspect);
 };
 
 module.exports = StrfLayout;
