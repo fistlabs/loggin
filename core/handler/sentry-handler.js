@@ -83,10 +83,18 @@ SentryHandler.prototype.handle = function (message) {
 
     delete message.message;
 
-    this.client.captureError(messageText, {
-        level: levelMap[message.level],
-        extra: message
-    });
+    if (messageText instanceof Error) {
+        this.client.captureError(messageText, {
+            level: levelMap[message.level],
+            extra: message
+        });
+    } else {
+        this.client.captureMessage(messageText, {
+            level: levelMap[message.level],
+            extra: message
+        });
+    }
+
 };
 
 module.exports = SentryHandler;
