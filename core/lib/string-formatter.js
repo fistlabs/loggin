@@ -2,8 +2,9 @@
 
 var R_TOKENS = /^(?:%(?:\(((?:[^()]+|"[^"]*"|'[^']*')+)\))?([+-])?(\d+)?(?:\.(\d+))?([a-z])|([^%]+)|%?(%))/;
 
-var hasProperty = Object.prototype.hasOwnProperty;
 var get = require('obus').get;
+var hasProperty = Object.prototype.hasOwnProperty;
+var util = require('util');
 
 /**
  * @class StringFormatter
@@ -28,6 +29,17 @@ function StringFormatter() {
 }
 
 StringFormatter.prototype.constructor = StringFormatter;
+
+/**
+ * @public
+ * @memberOf {StringFormatter}
+ * @method
+ *
+ * @returns {String}
+ * */
+StringFormatter.prototype.format = function () {
+    return this.formatSign(arguments, util.inspect);
+};
 
 /**
  * @public

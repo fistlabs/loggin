@@ -86,86 +86,82 @@ describe('core/util/strf', function () {
     });
 
     describe('strf.format', function () {
-        var stdFormat = strf.formatSign.bind(strf);
+        var format = strf.format.bind(strf);
         var util = require('util');
 
-        function format(sign) {
-            return stdFormat(sign, util.inspect);
-        }
-
         it('Should interpret "%%" sequences as "%"', function () {
-            assert.strictEqual(format(['%%%%']), '%%');
+            assert.strictEqual(format('%%%%'), '%%');
         });
 
         it('Should interpret single unmatched "%" as "%"', function () {
-            assert.strictEqual(format(['%']), '%');
-            assert.strictEqual(format(['foo%']), 'foo%');
+            assert.strictEqual(format('%'), '%');
+            assert.strictEqual(format('foo%'), 'foo%');
         });
 
         it('Should format placeholders according to type', function () {
-            assert.strictEqual(format(['%s, %d, %j, %%s', 'foo', 42, {}]), 'foo, 42, {}, %s');
+            assert.strictEqual(format('%s, %d, %j, %%s', 'foo', 42, {}), 'foo, 42, {}, %s');
         });
 
         it('Should support kwargs', function () {
-            assert.strictEqual(format(['%s, %d, %(foo)s, %%s', 'foo', 42, {foo: 'bar'}]), 'foo, 42, bar, %s');
+            assert.strictEqual(format('%s, %d, %(foo)s, %%s', 'foo', 42, {foo: 'bar'}), 'foo, 42, bar, %s');
         });
 
         it('Should use the last argument as kwargs', function () {
-            assert.strictEqual(format(['%s %(foo)s %s', 1, 2, 3, 4, {foo: 'bar'}]), '1 bar 2 3 4');
+            assert.strictEqual(format('%s %(foo)s %s', 1, 2, 3, 4, {foo: 'bar'}), '1 bar 2 3 4');
         });
 
         it('Should correctly choose kwargs argument', function () {
-            assert.strictEqual(format(['%y %(foo)s', {foo: 'bar'}]), '%y bar');
+            assert.strictEqual(format('%y %(foo)s', {foo: 'bar'}), '%y bar');
         });
 
         it('Should not skip undefined values', function () {
-            assert.strictEqual(format(['%s, %s, %(foo)s', 'foo', void 0, {}]), 'foo, undefined, undefined');
+            assert.strictEqual(format('%s, %s, %(foo)s', 'foo', void 0, {}), 'foo, undefined, undefined');
         });
 
         it('Should skip unsupported types', function () {
-            assert.strictEqual(format(['%h']), '%h');
+            assert.strictEqual(format('%h'), '%h');
         });
 
         it('Should inspect extra args', function () {
-            assert.strictEqual(format(['%s', 'foo', 'bar']), 'foo \'bar\'');
-            assert.strictEqual(format(['%s', 'foo', 1, 2]), 'foo 1 2');
-            assert.strictEqual(format(['%s %s', 1, 2, 3, 4]), '1 2 3 4');
-            assert.strictEqual(format(['%s', 'x', 1, 2]), 'x 1 2');
-            assert.strictEqual(format(['%y %s', 'foo', 'bar']), '%y foo \'bar\'');
-            assert.strictEqual(format(['%s', 'foo', {}]), 'foo {}');
-            assert.strictEqual(format([{}, 'foo', {}]), '{} \'foo\' {}');
+            assert.strictEqual(format('%s', 'foo', 'bar'), 'foo \'bar\'');
+            assert.strictEqual(format('%s', 'foo', 1, 2), 'foo 1 2');
+            assert.strictEqual(format('%s %s', 1, 2, 3, 4), '1 2 3 4');
+            assert.strictEqual(format('%s', 'x', 1, 2), 'x 1 2');
+            assert.strictEqual(format('%y %s', 'foo', 'bar'), '%y foo \'bar\'');
+            assert.strictEqual(format('%s', 'foo', {}), 'foo {}');
+            assert.strictEqual(format({}, 'foo', {}), '{} \'foo\' {}');
         });
 
         it('Should do nothing if no arguments passed', function () {
-            assert.strictEqual(format([]), '');
+            assert.strictEqual(format(), '');
         });
 
         it('Should not inspect kwargs', function () {
-            assert.strictEqual(format(['%s %(foo)s', 12, {foo: 'foo'}]), '12 foo');
+            assert.strictEqual(format('%s %(foo)s', 12, {foo: 'foo'}), '12 foo');
         });
 
         it('Should not fail on undefined kwargs', function () {
-            assert.strictEqual(format(['%s %(foo)s', 12]), '12 undefined');
-            assert.strictEqual(format(['%(foo)s']), 'undefined');
+            assert.strictEqual(format('%s %(foo)s', 12), '12 undefined');
+            assert.strictEqual(format('%(foo)s'), 'undefined');
         });
 
         it('Should support functional args', function () {
-            assert.strictEqual(format(['%s', function () {
+            assert.strictEqual(format('%s', function () {
                 return 'foo';
-            }]), 'foo');
+            }), 'foo');
         });
 
         it('Should ignore bad kwarg patterns', function () {
-            assert.strictEqual(format(['%( %s', 42]), '%( 42');
+            assert.strictEqual(format('%( %s', 42), '%( 42');
         });
 
         it('Should support deep kwargs', function () {
-            assert.strictEqual(format(['Hello, %(who[1])s!', {who: ['nobody', 'golyshevd']}]), 'Hello, golyshevd!');
-            assert.strictEqual(format(['Hello, %(["who"][1])s!', {who: ['nobody', 'golyshevd']}]), 'Hello, golyshevd!');
+            assert.strictEqual(format('Hello, %(who[1])s!', {who: ['nobody', 'golyshevd']}), 'Hello, golyshevd!');
+            assert.strictEqual(format('Hello, %(["who"][1])s!', {who: ['nobody', 'golyshevd']}), 'Hello, golyshevd!');
         });
 
         it('Should ignore undefined types', function () {
-            assert.strictEqual(format(['%y %s', 1]), '%y 1');
+            assert.strictEqual(format('%y %s', 1), '%y 1');
         });
     });
 });
