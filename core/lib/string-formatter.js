@@ -46,6 +46,15 @@ StringFormatter.prototype.parse = function (s) {
     return this.cache[s];
 };
 
+/**
+ * @private
+ * @memberOf {StringFormatter}
+ * @method
+ *
+ * @param {String} s
+ *
+ * @returns {Array}
+ * */
 StringFormatter.prototype.parsePattern = function (s) {
     var match;
     var parts = [];
