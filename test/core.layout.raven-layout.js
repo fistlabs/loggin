@@ -32,5 +32,21 @@ describe('core/layout/raven-layout', function () {
             vars = layout.format(vars);
             assert.strictEqual(vars.message, error);
         });
+
+        it('Should use all the rest arguments as meta data if first argument is Error', function () {
+            var error = new Error();
+            var layout = new Layout(record, {
+                template: ''
+            });
+            var vars = {
+                zot: 1,
+                message: [error, {foo: 42}, {bar: 11}, {zot: 100500}]
+            };
+            vars = layout.format(vars);
+            assert.strictEqual(vars.message, error);
+            assert.strictEqual(vars.foo, 42);
+            assert.strictEqual(vars.bar, 11);
+            assert.strictEqual(vars.zot, 1);
+        });
     });
 });
