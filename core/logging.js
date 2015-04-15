@@ -1,6 +1,17 @@
 /*eslint complexity: 0*/
 'use strict';
 
+var LEVELS = [
+    'INTERNAL', // TODO deprecate ?
+    'DEBUG',
+    'NOTE', // TODO deprecate?
+    'INFO',
+    'LOG',
+    'WARNING',
+    'ERROR',
+    'FATAL'
+];
+
 var Logger = /** @type Logger */ require('./logger');
 var LogginConfError = /** @type LogginConfError */require('./error/loggin-conf-error');
 
@@ -35,16 +46,7 @@ function Logging(name) {
      * @property
      * @type {Object}
      * */
-    this.levels = {
-        INTERNAL: 0,
-        DEBUG: 45,
-        NOTE: 80,
-        INFO: 110,
-        LOG: 135,
-        WARNING: 155,
-        ERROR: 170,
-        FATAL: 175
-    };
+    this.levels = _.mapValues(_.invert(LEVELS), Number);
 
     /**
      * @public
@@ -164,6 +166,7 @@ Logging.prototype.conf = function (configs) {
 Logging.prototype.record = function (context, level, caller, args) {
     var enabled;
     var handler;
+    var handlers = this.handlers;
     var i;
     var l;
     var layout;
@@ -178,7 +181,7 @@ Logging.prototype.record = function (context, level, caller, args) {
     enabled = this.configs.enabled;
 
     for (i = 0, l = enabled.length; i < l; i += 1) {
-        handler = this.handlers[enabled[i]];
+        handler = handlers[enabled[i]];
 
         //  support NaN handler.(min|max)Level
         if (curLevel < levels[handler.minLevel] || levels[handler.maxLevel] < curLevel) {

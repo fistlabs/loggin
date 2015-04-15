@@ -10,9 +10,7 @@ var dirname = path.dirname(filename);
  * @class Verbose
  * @extends Record
  * */
-function Verbose(params) {
-    Regular.call(this, params);
-}
+function Verbose() {}
 
 Verbose.prototype = Object.create(Regular.prototype);
 

@@ -1,6 +1,7 @@
 'use strict';
 
 var strf = require('../util/strf');
+var util = require('util');
 
 /**
  * @usage
@@ -70,10 +71,18 @@ AsIsLayout.prototype.format = function (record) {
  * */
 AsIsLayout.prototype._updateRecordAttrs = function (record) {
     //  just format record message with passed args
-    record.message = strf.format(record.message);
+    record.message = strf.formatSign(record.message, eInspect);
 
     return record;
 };
+
+function eInspect(v) {
+    if (v instanceof Error && v.stack) {
+        return v.stack;
+    }
+
+    return util.inspect(v);
+}
 
 /**
  * @protected
@@ -82,7 +91,7 @@ AsIsLayout.prototype._updateRecordAttrs = function (record) {
  *
  * @param {Object} record
  *
- * @returns {Object}
+ * @returns {*}
  * */
 AsIsLayout.prototype._formatRecord = function (record) {
     return record;

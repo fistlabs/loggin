@@ -24,7 +24,7 @@ describe('loggin', function () {
     ];
 
     _.forEach(handlers, function (handler) {
-         var shouldText = 'Should have "%s" handler';
+        var shouldText = 'Should have "%s" handler';
         it(f(shouldText, handler), function () {
             assert.ok(loggin.handlers[handler]);
             assert.strictEqual(typeof loggin.handlers[handler], 'object');

@@ -55,10 +55,10 @@ StrfLayout.prototype.constructor = StrfLayout;
  *
  * @param {Object} record
  *
- * @returns {String}
+ * @returns {*}
  * */
 StrfLayout.prototype._formatRecord = function (record) {
-    return strf.format([this.template, record]);
+    return strf.formatSign([this.template, record]);
 };
 
 module.exports = StrfLayout;

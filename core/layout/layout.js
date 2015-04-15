@@ -68,7 +68,7 @@ Layout.prototype._formatRecord = function (record) {
 
     for (i = 0, l = message.length; i < l; i += 1) {
         record.message = message[i];
-        results[i] = strf.format([this.template, record]);
+        results[i] = strf.formatSign([this.template, record]);
     }
 
     return results.join('');
