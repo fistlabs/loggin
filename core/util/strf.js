@@ -3,7 +3,8 @@
 var StringFormatter = require('../lib/string-formatter');
 var strf = new StringFormatter();
 
-strf.addType('s', function (value, sign, width, precision) {
+/*eslint-disable complexity*/
+strf.addType('s', function (value, sign, fill, width, precision) {
     value = String(value);
 
     if (precision) {
@@ -14,32 +15,36 @@ strf.addType('s', function (value, sign, width, precision) {
         return value;
     }
 
+    if (!fill) {
+        fill = ' ';
+    }
+
     if (sign === '-') {
         while (value.length < width) {
-            value += ' ';
+            value = value + fill;
         }
     } else {
         while (value.length < width) {
-            value = ' ' + value;
+            value = fill + value;
         }
     }
 
     return value;
 });
+/*eslint-enable complexity*/
 
-strf.addType('j', function (value, sign, width, precision) {
+strf.addType('j', function (value, sign, fill, width, precision) {
     try {
         value = JSON.stringify(value);
     } catch (e) {
         value = '[Circular]';
     }
 
-    return this.s(value, sign, width, precision);
+    return this.s(value, sign, fill, width, precision);
 });
 
-strf.addType('d', function (value, sign, width, precision) {
-    /*eslint complexity: 0*/
-    var pad = ' ';
+/*eslint-disable complexity*/
+strf.addType('d', function (value, sign, fill, width, precision) {
     var pfx = '';
 
     value = parseInt(value, 10);
@@ -62,34 +67,28 @@ strf.addType('d', function (value, sign, width, precision) {
         return pfx + value;
     }
 
+    if (!fill) {
+        fill = ' ';
+    }
+
     if (sign === '-') {
         value = pfx + value;
 
         while (value.length < width) {
-            value += pad;
+            value += fill;
         }
 
         return value;
     }
 
-    if (width.length > 1 && width.charAt(0) === '0') {
-        pad = '0';
-        width = width.substr(1);
-
-        while ((pfx + value).length < width) {
-            value = pad + value;
-        }
-
-        return pfx + value;
-    }
-
     value = pfx + value;
 
     while (value.length < width) {
-        value = pad + value;
+        value = fill + value;
     }
 
     return value;
 });
+/*eslint-enable complexity*/
 
 module.exports = strf;
