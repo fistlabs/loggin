@@ -31,5 +31,10 @@ describe('core/record/regular', function () {
             assert.strictEqual(vars.process, process.pid);
             assert.strictEqual(vars.name, 'all');
         });
+
+        it('Should not overwrite built-in record attributes', function should() {
+            var vars = record.create('foo', 'LOG', should, [{process: 42}]);
+            assert.strictEqual(vars.process, process.pid);
+        });
     });
 });

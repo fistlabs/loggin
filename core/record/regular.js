@@ -25,13 +25,13 @@ Regular.prototype.constructor = Regular;
  * */
 Regular.prototype.create = function (context, level, caller, args) {
 
-    return _.extend({
+    return _.extend({}, args[args.length - 1], {
         process: process.pid,
         context: context,
         level: level,
         date: new Date(),
         message: args
-    }, args[args.length - 1]);
+    });
 };
 
 module.exports = Regular;
