@@ -16,15 +16,21 @@ describe('core/util/strf', function () {
         });
 
         it('Should support precision', function () {
-            assert.strictEqual(s('foobar', void 0, void 0, '3'), 'foo');
+            assert.strictEqual(s('foobar', void 0, void 0, void 0, '3'), 'foo');
         });
 
         it('Should support width', function () {
-            assert.strictEqual(s('foo', void 0, '5'), '  foo');
+            assert.strictEqual(s('foo', void 0, void 0, '5'), '  foo');
+        });
+
+        it('Should support fill', function () {
+            assert.strictEqual(s('foo', void 0, 'x', '5'), 'xxfoo');
+            assert.strictEqual(s('foo', void 0, '0', '5'), '00foo');
+            assert.strictEqual(s('foo', void 0, ':', '5'), '::foo');
         });
 
         it('Should support "-" sign', function () {
-            assert.strictEqual(s('foo', '-', '5'), 'foo  ');
+            assert.strictEqual(s('foo', '-', ' ', '5'), 'foo  ');
         });
     });
 
@@ -42,7 +48,7 @@ describe('core/util/strf', function () {
         });
 
         it('Should support sign, width, precision like "s"', function () {
-            assert.strictEqual(j({foo: 'bar'}, '-', '5', '3'), '{"f  ');
+            assert.strictEqual(j({foo: 'bar'}, '-', ' ', '5', '3'), '{"f  ');
         });
     });
 
@@ -64,30 +70,28 @@ describe('core/util/strf', function () {
         });
 
         it('Should support precision', function () {
-            assert.strictEqual(d('5', void 0, void 0, '3'), '005');
+            assert.strictEqual(d('5', void 0, void 0, void 0, '3'), '005');
         });
 
         it('Should support "-" sign for width', function () {
-            assert.strictEqual(d('5', '-', '3', void 0), '5  ');
+            assert.strictEqual(d('5', '-', ' ', '3', void 0), '5  ');
         });
 
-        it('Should left padded by "0" if width starts with "0"', function () {
-            assert.strictEqual(d('5', '+', '03', void 0), '+05');
-            assert.strictEqual(d('5', void 0, '03', void 0), '005');
+        it('Should support fill', function () {
+            assert.strictEqual(d('5', '+', 'x', '3', void 0), 'x+5');
         });
 
         it('Should left padded by " " according to width', function () {
-            assert.strictEqual(d('5', void 0, '3', void 0), '  5');
+            assert.strictEqual(d('5', void 0, ' ', '3', void 0), '  5');
         });
 
         it('Precision should not be trimmed by width', function () {
-            assert.strictEqual(d('5', void 0, '3', '5'), '00005');
+            assert.strictEqual(d('5', void 0, void 0, '3', '5'), '00005');
         });
     });
 
     describe('strf.format', function () {
         var format = strf.format.bind(strf);
-        var util = require('util');
 
         it('Should interpret "%%" sequences as "%"', function () {
             assert.strictEqual(format('%%%%'), '%%');

@@ -1,6 +1,8 @@
 'use strict';
 
-var R_TOKENS = /^(?:%(?:\(((?:[^()]+|"[^"]*"|'[^']*')+)\))?([+-])?(\d+)?(?:\.(\d+))?([a-z])|([^%]+)|%?(%))/;
+/*jscs: disable*/
+var R_TOKENS = /^(?:%(?:\(((?:[^()]+|"[^"]*"|'[^']*')+)\))?([+-])?(?:(?:([\s\S]):)?(\d+))?(?:\.(\d+))?([a-z])|([^%]+)|%?(%))/;
+/*jscs: enable*/
 
 var get = require('obus').get;
 var hasProperty = Object.prototype.hasOwnProperty;
@@ -108,17 +110,17 @@ StringFormatter.prototype._parsePattern = function (s) {
     while (match = R_TOKENS.exec(s)) {
         s = s.substr(match[0].length);
 
-        if (!match[5]) {
-            parts[parts.length] = match[6] || match[7];
+        if (!match[6]) {
+            parts[parts.length] = match[7] || match[8];
             continue;
         }
 
-        if (typeof this._types[match[5]] !== 'function') {
+        if (typeof this._types[match[6]] !== 'function') {
             parts[parts.length] = match[0];
             continue;
         }
 
-        parts[parts.length] = [match[5], match[1], match[2], match[3], match[4], match[0]];
+        parts[parts.length] = [match[6], match[1], match[2], match[3], match[4], match[5], match[0]];
     }
 
     return parts;
@@ -166,7 +168,7 @@ StringFormatter.prototype._formatPattern = function (patternString, args, ofs, i
             value = value();
         }
 
-        s += this._types[part[0]](value, part[2], part[3], part[4]);
+        s += this._types[part[0]](value, part[2], part[3], part[4], part[5]);
     }
 
     return s + this._inspectArgs(args, pos, Number(usesKwargs), ' ', inspect);
