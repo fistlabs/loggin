@@ -8,7 +8,7 @@ var dirname = path.dirname(filename);
 
 /**
  * @class Verbose
- * @extends Record
+ * @extends Regular
  * */
 function Verbose() {}
 

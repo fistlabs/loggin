@@ -1,35 +1,37 @@
 'use strict';
 
+var _ = require('lodash-node');
+
 /**
- * @class Record
+ * @class Regular
  * */
-function Record() {}
+function Regular() {}
 
 /**
  * @public
- * @memberOf {Record}
+ * @memberOf {Regular}
  * @method
  *
  * @constructs
  * */
-Record.prototype.constructor = Record;
+Regular.prototype.constructor = Regular;
 
 /**
  * @public
- * @memberOf {Record}
+ * @memberOf {Regular}
  * @method
  *
  * @returns {Object}
  * */
-Record.prototype.create = function (context, level, caller, args) {
+Regular.prototype.create = function (context, level, caller, args) {
 
-    return {
+    return _.extend({
         process: process.pid,
         context: context,
         level: level,
         date: new Date(),
         message: args
-    };
+    }, args[args.length - 1]);
 };
 
-module.exports = Record;
+module.exports = Regular;

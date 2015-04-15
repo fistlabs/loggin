@@ -19,5 +19,17 @@ describe('core/record/regular', function () {
             assert.deepEqual(vars.message, ['Hi %s!', 'all']);
             assert.strictEqual(vars.process, process.pid);
         });
+
+        it('Should extend created object with last arg', function should() {
+
+            var vars = record.create('foo', 'LOG', should, ['Hi %(name)s!', {name: 'all'}]);
+
+            assert.strictEqual(vars.context, 'foo');
+            assert.strictEqual(vars.level, 'LOG');
+            assert.ok(vars.date instanceof Date);
+            assert.deepEqual(vars.message, ['Hi %(name)s!', {name: 'all'}]);
+            assert.strictEqual(vars.process, process.pid);
+            assert.strictEqual(vars.name, 'all');
+        });
     });
 });
