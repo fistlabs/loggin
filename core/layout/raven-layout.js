@@ -28,12 +28,14 @@ RavenLayout.prototype.constructor = RavenLayout;
 RavenLayout.prototype._updateRecordAttrs = function (vars) {
     var message = vars.message;
     var i = 0;
-    var l = 0;
+    var l = message.length;
     var newVars = {};
 
     if (message[0] instanceof Error) {
-        for (i = 1, l = message.length; i < l; i += 1) {
-            _.extend(newVars, message[i]);
+        for (i = 1; i < l; i += 1) {
+            if (_.isObject(message[i])) {
+                _.extend(newVars, message[i]);
+            }
         }
 
         _.extend(newVars, vars, {
@@ -41,6 +43,10 @@ RavenLayout.prototype._updateRecordAttrs = function (vars) {
         });
 
         return newVars;
+    }
+
+    if (_.isObject(message[l - 1])) {
+        vars = _.extend(newVars, message[l - 1], vars);
     }
 
     return AsisLayout.prototype._updateRecordAttrs.call(this, vars);
