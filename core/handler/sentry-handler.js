@@ -76,17 +76,23 @@ SentryHandler.prototype._createClient = function (dsn, options) {
  * @memberOf {SentryHandler}
  * @method
  *
- * @param {*} message
+ * @param {*} vars
  * */
-SentryHandler.prototype.handle = function (message) {
-    var messageText = message.message;
+SentryHandler.prototype.handle = function (vars) {
+    var messageText = vars.message;
+    var kwargs = {
+        level: levelMap[vars.level],
+        extra: vars
+    };
 
-    delete message.message;
+    delete vars.message;
 
-    this.client.captureError(messageText, {
-        level: levelMap[message.level],
-        extra: message
-    });
+    if (messageText instanceof Error) {
+        this.client.captureError(messageText, kwargs);
+    } else {
+        this.client.captureMessage(messageText, kwargs);
+    }
+
 };
 
 module.exports = SentryHandler;

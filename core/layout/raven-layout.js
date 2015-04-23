@@ -2,6 +2,8 @@
 
 var AsisLayout = /** @type AsisLayout */ require('./asis-layout');
 
+var _ = require('lodash-node');
+
 /**
  * @class RavenLayout
  * @extends AsisLayout
@@ -19,19 +21,35 @@ RavenLayout.prototype.constructor = RavenLayout;
  * @memberOf {RavenLayout}
  * @method
  *
- * @param {Object} record
+ * @param {Object} vars
  *
  * @returns {Object}
  * */
-RavenLayout.prototype._updateRecordAttrs = function (record) {
-    var message = record.message;
+RavenLayout.prototype._updateRecordAttrs = function (vars) {
+    var message = vars.message;
+    var i = 0;
+    var l = message.length;
+    var newVars = {};
 
-    if (message[0] instanceof Error && message.length === 1) {
-        record.message = message[0];
-        return record;
+    if (message[0] instanceof Error) {
+        for (i = 1; i < l; i += 1) {
+            if (_.isObject(message[i])) {
+                _.extend(newVars, message[i]);
+            }
+        }
+
+        _.extend(newVars, vars, {
+            message: message[0]
+        });
+
+        return newVars;
     }
 
-    return AsisLayout.prototype._updateRecordAttrs.call(this, record);
+    if (_.isObject(message[l - 1])) {
+        vars = _.extend(newVars, message[l - 1], vars);
+    }
+
+    return AsisLayout.prototype._updateRecordAttrs.call(this, vars);
 };
 
 module.exports = RavenLayout;

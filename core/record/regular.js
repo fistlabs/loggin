@@ -1,7 +1,5 @@
 'use strict';
 
-var _ = require('lodash-node');
-
 /**
  * @class Regular
  * */
@@ -25,13 +23,13 @@ Regular.prototype.constructor = Regular;
  * */
 Regular.prototype.create = function (context, level, caller, args) {
 
-    return _.extend({}, args[args.length - 1], {
+    return {
         process: process.pid,
         context: context,
         level: level,
         date: new Date(),
         message: args
-    });
+    };
 };
 
 module.exports = Regular;

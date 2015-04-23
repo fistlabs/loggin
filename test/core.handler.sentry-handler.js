@@ -41,6 +41,7 @@ describe('core/handler/sentry-handler', function () {
         it('Should call captureError()', function () {
             var handler = createHandler({});
             var spy;
+            var messageObj = new Error();
             handler.client.captureError = function (message, options) {
                 spy = {
                     message: message,
@@ -49,13 +50,13 @@ describe('core/handler/sentry-handler', function () {
             };
 
             handler.handle({
-                message: 'foo',
+                message: messageObj,
                 level: 'DEBUG',
                 bar: 'baz'
             });
 
             assert.deepEqual(spy, {
-                message: 'foo',
+                message: messageObj,
                 options: {
                     level: 'debug',
                     extra: {
@@ -64,7 +65,35 @@ describe('core/handler/sentry-handler', function () {
                     }
                 }
             });
+        });
 
+        it('Should call captureMessage()', function () {
+            var handler = createHandler({});
+            var spy;
+            var messageObj = 'foo';
+            handler.client.captureMessage = function (message, options) {
+                spy = {
+                    message: message,
+                    options: options
+                };
+            };
+
+            handler.handle({
+                message: messageObj,
+                level: 'DEBUG',
+                bar: 'baz'
+            });
+
+            assert.deepEqual(spy, {
+                message: messageObj,
+                options: {
+                    level: 'debug',
+                    extra: {
+                        level: 'DEBUG',
+                        bar: 'baz'
+                    }
+                }
+            });
         });
     });
 });
