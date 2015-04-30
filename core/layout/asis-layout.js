@@ -71,7 +71,9 @@ AsIsLayout.prototype.format = function (record) {
  * */
 AsIsLayout.prototype._updateRecordAttrs = function (record) {
     //  just format record message with passed args
-    record.message = strf.formatSign(record.message, eInspect);
+    var inspect = this.params.showStackTraces ? eInspect : util.inspect;
+
+    record.message = strf.formatSign(record.message, inspect);
 
     return record;
 };

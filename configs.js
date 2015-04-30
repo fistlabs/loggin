@@ -4,7 +4,7 @@ var resolve = require.resolve;
 
 module.exports = {
     logLevel: 'NOTE',
-    enabled: ['stdoutColorRegular', 'stderrColorVerbose'],
+    enabled: ['stdoutColorRegular', 'stderrColorRegular', 'stderrColorVerbose'],
     handlers: {
         //  development regular logs
         stdoutColorRegular: {
@@ -12,6 +12,16 @@ module.exports = {
             layout: 'colorRegular',
             kwargs: {
                 maxLevel: 'LOG',
+                stream: process.stdout
+            }
+        },
+        // development warnings
+        stderrColorRegular: {
+            Class: resolve('./core/handler/stream-handler'),
+            layout: 'colorRegular',
+            kwargs: {
+                minLevel: 'WARNING',
+                maxLevel: 'WARNING',
                 stream: process.stderr
             }
         },
@@ -20,7 +30,7 @@ module.exports = {
             Class: resolve('./core/handler/stream-handler'),
             layout: 'colorVerbose',
             kwargs: {
-                minLevel: 'WARNING',
+                minLevel: 'ERROR',
                 stream: process.stderr
             }
         },
@@ -32,12 +42,22 @@ module.exports = {
                 stream: process.stdout
             }
         },
-        //  production warnings+
+        // production warnings
+        stderrCleanRegular: {
+            Class: resolve('./core/handler/stream-handler'),
+            layout: 'cleanRegular',
+            kwargs: {
+                minLevel: 'WARNING',
+                maxLevel: 'WARNING',
+                stream: process.stderr
+            }
+        },
+        //  production errors
         stderrCleanVerbose: {
             Class: resolve('./core/handler/stream-handler'),
             layout: 'cleanVerbose',
             kwargs: {
-                minLevel: 'WARNING',
+                minLevel: 'ERROR',
                 stream: process.stderr
             }
         }
@@ -56,6 +76,7 @@ module.exports = {
             Class: resolve('./core/layout/layout'),
             record: 'verbose',
             kwargs: {
+                showStackTraces: true,
                 dateFormat: '%d/%b/%Y:%H:%M:%S %z',
                 template: '[%(date)s] %(process)5s %(level)-8s ' +
                     '%(filename)s:%(line)d:%(column)d %(context)s — %(message)s\n'
@@ -74,6 +95,7 @@ module.exports = {
             Class: resolve('./core/layout/colored'),
             record: 'verbose',
             kwargs: {
+                showStackTraces: true,
                 dateFormat: '%H:%M:%S.%L',
                 template: '\x1B[90m[%(date)s]\x1B[0m %(process)5s %(level)-17s ' +
                     '%(module)s:%(line)d:%(column)d %(context)s — %(message)s\n'

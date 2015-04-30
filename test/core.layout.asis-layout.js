@@ -3,7 +3,7 @@
 'use strict';
 
 var assert = require('assert');
-// var util = require('util');
+var util = require('util');
 
 describe('core/layout/asis-layout', function () {
     var Layout = require('../core/layout/asis-layout');
@@ -44,7 +44,8 @@ describe('core/layout/asis-layout', function () {
 
         it('Should specially inspect errors', function () {
             var layout = new Layout(record, {
-                template: ''
+                template: '',
+                showStackTraces: true
             });
             var e = new Error();
             e.stack = 's';
@@ -54,5 +55,19 @@ describe('core/layout/asis-layout', function () {
             vars = layout.format(vars);
             assert.strictEqual(vars.message, 'x 1 ' + e.stack);
         });
+
+        it('Should NOT specially inspect errors', function () {
+            var layout = new Layout(record, {
+                template: ''
+            });
+            var e = new Error();
+            e.stack = 's';
+            var vars = {
+                message: ['%s', 'x', 1, e]
+            };
+            vars = layout.format(vars);
+            assert.strictEqual(vars.message, 'x 1 ' + util.inspect(e));
+        });
+
     });
 });
