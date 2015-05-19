@@ -15,7 +15,8 @@ describe('core/layout/raven-layout', function () {
                 template: ''
             });
             var vars = {
-                message: ['foo %s', 'bar']
+                message: ['foo %s', 'bar'],
+                context: []
             };
             vars = layout.format(vars);
             assert.strictEqual(vars.message, 'foo bar');
@@ -27,7 +28,8 @@ describe('core/layout/raven-layout', function () {
                 template: ''
             });
             var vars = {
-                message: [error]
+                message: [error],
+                context: []
             };
             vars = layout.format(vars);
             assert.strictEqual(vars.message, error);
@@ -40,7 +42,8 @@ describe('core/layout/raven-layout', function () {
             });
             var vars = {
                 zot: 1,
-                message: [error, {foo: 42}, {bar: 11}, {zot: 100500}]
+                message: [error, {foo: 42}, {bar: 11}, {zot: 100500}],
+                context: []
             };
             vars = layout.format(vars);
             assert.strictEqual(vars.message, error);
@@ -55,7 +58,8 @@ describe('core/layout/raven-layout', function () {
                 template: ''
             });
             var vars = {
-                message: [error, 'asd', {foo: 42}]
+                message: [error, 'asd', {foo: 42}],
+                context: []
             };
             vars = layout.format(vars);
             assert.strictEqual(vars.message, error);
@@ -75,7 +79,8 @@ describe('core/layout/raven-layout', function () {
             };
 
             layout.format({
-                message: ['Some message', {foo: 42}]
+                message: ['Some message', {foo: 42}],
+                context: []
             });
         });
 
@@ -89,7 +94,8 @@ describe('core/layout/raven-layout', function () {
                 done();
             };
             layout.format({
-                message: ['Some message', {message: 42, foo: 11}]
+                message: ['Some message', {message: 42, foo: 11}],
+                context: []
             });
         });
     });

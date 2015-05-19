@@ -24,7 +24,8 @@ describe('core/layout/colored', function () {
             var vars = {
                 level: 'ERROR',
                 message: ['foo'],
-                date: new Date()
+                date: new Date(),
+                context: []
             };
             var colored = new Colored(record, {
                 template: '%(date)s %(level)s %(message)s',

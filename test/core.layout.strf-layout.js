@@ -25,7 +25,8 @@ describe('core/layout/strf-layout', function () {
                 template: '%(message)s'
             });
             var vars = {
-                message: ['foo %s', 'bar']
+                message: ['foo %s', 'bar'],
+                context: []
             };
             assert.strictEqual(layout.format(vars), 'foo bar');
         });
@@ -35,7 +36,8 @@ describe('core/layout/strf-layout', function () {
                 template: '42'
             });
             var vars = {
-                message: ['foo', 'bar']
+                message: ['foo', 'bar'],
+                context: []
             };
             assert.strictEqual(layout.format(vars), '42 ' + util.inspect(vars));
         });

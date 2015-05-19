@@ -18,7 +18,8 @@ describe('core/layout/layout', function () {
             });
             var vars = {
                 date: new Date(),
-                message: ['bar %s', 'baz']
+                message: ['bar %s', 'baz'],
+                context: []
             };
             assert.strictEqual(layout.format(vars), 'foo bar baz');
         });

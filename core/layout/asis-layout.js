@@ -74,6 +74,7 @@ AsIsLayout.prototype._updateRecordAttrs = function (record) {
     var inspect = this.params.showStackTraces ? eInspect : util.inspect;
 
     record.message = strf.formatSign(record.message, inspect);
+    record.context = record.context.join('/');
 
     return record;
 };

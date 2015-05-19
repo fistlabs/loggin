@@ -68,12 +68,12 @@ describe('loggin', function () {
             var logger = loggin.getLogger('foo');
             assert.ok(loggin instanceof Logger);
             assert.ok(loggin instanceof Logging);
-            assert.strictEqual(logger.context, 'foo');
+            assert.deepEqual(logger.context, ['foo']);
         });
 
         it('Should give default name to logger if no specified', function () {
             var logger = loggin.getLogger();
-            assert.strictEqual(logger.context, 'default');
+            assert.deepEqual(logger.context, ['default']);
         });
 
         it('Should cache loggers', function () {

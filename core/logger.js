@@ -15,7 +15,7 @@ var recorders = [
  * @class Logger
  *
  * @param {Logging} logging
- * @param {String} context
+ * @param {Array<String>} context
  * */
 function Logger(logging, context) {
 
@@ -23,7 +23,7 @@ function Logger(logging, context) {
      * @public
      * @memberOf {Logger}
      * @property
-     * @type {String}
+     * @type {Array<String>}
      * */
     this.context = context;
 
@@ -55,7 +55,7 @@ Logger.prototype.constructor = Logger;
  * @returns {Logger}
  * */
 Logger.prototype.bind = function (name) {
-    return new Logger(this.logging, this.context + '/' + name);
+    return new Logger(this.logging, this.context.concat(name));
 };
 
 /**

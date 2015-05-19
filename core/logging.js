@@ -25,7 +25,7 @@ var duck = require('./util/duck');
 function Logging(name) {
     var logLevel = void 0;
 
-    Logger.call(this, this, name);
+    Logger.call(this, this, [name]);
 
     /**
      * @public

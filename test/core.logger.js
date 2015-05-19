@@ -51,19 +51,19 @@ describe('core/logger', function () {
 
     describe('logger.name', function () {
         it('Should be a passed name', function () {
-            var logger = new Logger({}, 'foo');
+            var logger = new Logger({}, ['foo']);
             assert.ok(logger.context);
-            assert.strictEqual(logger.context, 'foo');
+            assert.deepEqual(logger.context, ['foo']);
         });
     });
 
     describe('logger.bind', function () {
         it('Should bind context', function () {
-            var logger = new Logger({}, 'foo');
+            var logger = new Logger({}, ['foo']);
             assert.ok(logger.context);
-            assert.strictEqual(logger.context, 'foo');
+            assert.deepEqual(logger.context, ['foo']);
             var logger2 = logger.bind('bar');
-            assert.deepEqual(logger2.context.split(/\W/), ['foo', 'bar']);
+            assert.deepEqual(logger2.context.sort(), ['foo', 'bar'].sort());
         });
     });
 

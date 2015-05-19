@@ -36,7 +36,8 @@ describe('core/layout/asis-layout', function () {
                 template: ''
             });
             var vars = {
-                message: ['foo %s', 'bar']
+                message: ['foo %s', 'bar'],
+                context: []
             };
             vars = layout.format(vars);
             assert.strictEqual(vars.message, 'foo bar');
@@ -50,7 +51,8 @@ describe('core/layout/asis-layout', function () {
             var e = new Error();
             e.stack = 's';
             var vars = {
-                message: ['%s', 'x', 1, e]
+                message: ['%s', 'x', 1, e],
+                context: []
             };
             vars = layout.format(vars);
             assert.strictEqual(vars.message, 'x 1 ' + e.stack);
@@ -63,7 +65,8 @@ describe('core/layout/asis-layout', function () {
             var e = new Error();
             e.stack = 's';
             var vars = {
-                message: ['%s', 'x', 1, e]
+                message: ['%s', 'x', 1, e],
+                context: []
             };
             vars = layout.format(vars);
             assert.strictEqual(vars.message, 'x 1 ' + util.inspect(e));
