@@ -167,5 +167,9 @@ describe('core/util/strf', function () {
         it('Should ignore undefined types', function () {
             assert.strictEqual(format('%y %s', 1), '%y 1');
         });
+
+        it('Should not use kwargs as positional arg', function () {
+            assert.strictEqual(format('%(name)s %j', {name: 'Foo'}), 'Foo undefined');
+        });
     });
 });

@@ -147,6 +147,7 @@ StringFormatter.prototype._formatPattern = function (patternString, args, ofs, i
     var pos = Math.max(0, ofs);
     var parts = this._parse(patternString);
     var usesKwargs = false;
+    var argc = args.length;
 
     for (i = 0, l = parts.length; i < l; i += 1) {
         part = parts[i];
@@ -158,9 +159,14 @@ StringFormatter.prototype._formatPattern = function (patternString, args, ofs, i
 
         if (part[1]) {
             usesKwargs = true;
-            value = get(args[args.length - 1], part[1]);
+            value = get(args[argc - 1], part[1]);
         } else {
-            value = args[pos];
+            if (usesKwargs && pos === argc - 1) {
+                value = void 0;
+            } else {
+                value = args[pos];
+            }
+
             pos += 1;
         }
 
