@@ -156,7 +156,7 @@ Logging.prototype.conf = function (configs) {
  * @memberOf {Logger}
  * @method
  *
- * @param {String} context
+ * @param {Array<String>} context
  * @param {String} level
  * @param {Function} caller
  * @param {Array|Arguments} args

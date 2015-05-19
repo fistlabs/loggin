@@ -1,5 +1,8 @@
 'use strict';
 
+var _ = require('lodash-node');
+var duck = require('./util/duck');
+
 var recorders = [
     'internal',
     'debug',
@@ -50,12 +53,33 @@ Logger.prototype.constructor = Logger;
  * @memberOf {Logger}
  * @method
  *
- * @param {String} name
- *
  * @returns {Logger}
  * */
-Logger.prototype.bind = function (name) {
-    return new Logger(this.logging, this.context.concat(name));
+Logger.prototype.bind = function () {
+    var args = _.flatten(arguments);
+    var context0 = this.context;
+    var i;
+    var l = context0.length;
+    var name;
+    var context = new Array(l);
+
+    for (i = 0; i < l; i += 1) {
+        context[i] = context0[i];
+    }
+
+    l = args.length;
+
+    for (i = 0; i < l; i += 1) {
+        name = args[i];
+
+        if (duck.isLogger(name)) {
+            context = context.concat(name.context);
+        } else {
+            context.push(name);
+        }
+    }
+
+    return new Logger(this.logging, context);
 };
 
 /**

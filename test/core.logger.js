@@ -65,6 +65,21 @@ describe('core/logger', function () {
             var logger2 = logger.bind('bar');
             assert.deepEqual(logger2.context.sort(), ['foo', 'bar'].sort());
         });
+
+        it('Should support multiple args', function () {
+            var logger = new Logger({}, ['a']);
+            var logger2 = logger.bind('b', 'c', ['d']);
+            assert.deepEqual(logger2.context.sort(), ['a', 'b', 'c', 'd'].sort());
+        });
+
+        it('Should support loggers as args', function () {
+            var logging = {context: []};
+            logging.logging = logging;
+            var logger = new Logger(logging, ['a']);
+            var logger2 = logger.bind(new Logger(logging, ['b']),
+                [new Logger(logging, ['c']), new Logger(logging, ['d'])], 'e');
+            assert.deepEqual(logger2.context.sort(), ['a', 'b', 'c', 'd', 'e']);
+        });
     });
 
     describe('logger.setup', function () {

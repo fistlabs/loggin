@@ -13,3 +13,7 @@ exports.isLayout = function (obj) {
 exports.isHandler = function (obj) {
     return _.isObject(obj) && _.isFunction(obj.handle) && exports.isLayout(obj.layout);
 };
+
+exports.isLogger = function (obj) {
+    return _.isObject(obj) && _.isObject(obj.logging) && obj.logging === obj.logging.logging && _.isArray(obj.context);
+};
