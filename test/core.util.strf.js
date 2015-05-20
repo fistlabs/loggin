@@ -44,7 +44,16 @@ describe('core/util/strf', function () {
         it('Should not fail on circular JSON', function () {
             var o = {};
             o.o = o;
-            assert.strictEqual(j(o), '[Circular]');
+            assert.doesNotThrow(function () {
+                j(o);
+            });
+        });
+
+        it('Should replace circular links with [Circular]', function () {
+            var o = {};
+            o.a = o;
+            o.b = o;
+            assert.strictEqual(j(o), '{"a":"[Circular]","b":"[Circular]"}');
         });
 
         it('Should support sign, width, precision like "s"', function () {
