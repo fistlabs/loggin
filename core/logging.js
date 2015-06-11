@@ -13,7 +13,7 @@ var LEVELS = [
 ];
 
 var Logger = /** @type Logger */ require('./logger');
-var LogginConfError = /** @type LogginConfError */require('./error/loggin-conf-error');
+var errors = require('./errors');
 
 var _ = require('lodash-node');
 var duck = require('./util/duck');
@@ -140,7 +140,7 @@ Logging.prototype.conf = function (configs) {
 
     _.forEach(this.configs.enabled, function (handler) {
         if (!duck.isHandler(this.handlers[handler])) {
-            throw new LogginConfError('No such handler ' + handler);
+            throw new errors.LogginConfError('No such handler ' + handler);
         }
     }, this);
 
@@ -215,7 +215,7 @@ Logging.prototype._createRecords = function (records) {
         }
 
         if (!_.has(config, 'Class')) {
-            throw new LogginConfError('Record config must be a {Record} or specify Record constructor');
+            throw new errors.LogginConfError('Record config must be a {Record} or specify Record constructor');
         }
 
         RecordClass = config.Class;
@@ -225,13 +225,13 @@ Logging.prototype._createRecords = function (records) {
         }
 
         if (!_.isFunction(RecordClass)) {
-            throw new LogginConfError('record.Class must specify constructor');
+            throw new errors.LogginConfError('record.Class must specify constructor');
         }
 
         config = new RecordClass(config.kwargs);
 
         if (!duck.isRecord(config)) {
-            throw new LogginConfError('Record constructor must construct a record');
+            throw new errors.LogginConfError('Record constructor must construct a record');
         }
 
         return config;
@@ -257,7 +257,7 @@ Logging.prototype._createLayouts = function (layouts) {
         }
 
         if (!_.has(config, 'Class')) {
-            throw new LogginConfError('Layout config must be a {Layout} or specify Layout constructor');
+            throw new errors.LogginConfError('Layout config must be a {Layout} or specify Layout constructor');
         }
 
         LayoutClass = config.Class;
@@ -267,19 +267,19 @@ Logging.prototype._createLayouts = function (layouts) {
         }
 
         if (!_.isFunction(LayoutClass)) {
-            throw new LogginConfError('layout.Class must specify constructor');
+            throw new errors.LogginConfError('layout.Class must specify constructor');
         }
 
         record = this.records[config.record];
 
         if (!duck.isRecord(record)) {
-            throw new LogginConfError('No such record instance ' + config.record);
+            throw new errors.LogginConfError('No such record instance ' + config.record);
         }
 
         config = new LayoutClass(record, config.kwargs);
 
         if (!duck.isLayout(config)) {
-            throw new LogginConfError('Layout constructor must construct a layout');
+            throw new errors.LogginConfError('Layout constructor must construct a layout');
         }
 
         return config;
@@ -305,7 +305,7 @@ Logging.prototype._createHandlers = function (handlers) {
         }
 
         if (!_.has(config, 'Class')) {
-            throw new LogginConfError('Handler config must be a {Handler} or specify Handler constructor');
+            throw new errors.LogginConfError('Handler config must be a {Handler} or specify Handler constructor');
         }
 
         HandlerClass = config.Class;
@@ -315,19 +315,19 @@ Logging.prototype._createHandlers = function (handlers) {
         }
 
         if (!_.isFunction(HandlerClass)) {
-            throw new LogginConfError('handler.Class must specify constructor');
+            throw new errors.LogginConfError('handler.Class must specify constructor');
         }
 
         layout = this.layouts[config.layout];
 
         if (!duck.isLayout(layout)) {
-            throw new LogginConfError('No such layout instance ' + config.layout);
+            throw new errors.LogginConfError('No such layout instance ' + config.layout);
         }
 
         config = new HandlerClass(layout, config.kwargs);
 
         if (!duck.isHandler(config)) {
-            throw new LogginConfError('Handler constructor must construct a handler');
+            throw new errors.LogginConfError('Handler constructor must construct a handler');
         }
 
         return config;

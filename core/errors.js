@@ -46,6 +46,6 @@ LogginConfError.prototype.constructor = LogginConfError;
  * @property
  * @type {String}
  * */
-LogginConfError.prototype.name = 'LogginConfError';
+LogginConfError.prototype.name = LogginConfError.name;
 
-module.exports = LogginConfError;
+exports.LogginConfError = LogginConfError;
