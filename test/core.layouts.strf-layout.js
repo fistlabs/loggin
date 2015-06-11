@@ -5,8 +5,8 @@
 var assert = require('assert');
 var util = require('util');
 
-describe('core/layout/strf-layout', function () {
-    var Layout = require('../core/layout/strf-layout');
+describe('core/layouts/strf-layout', function () {
+    var Layout = require('../core/layouts/strf-layout');
     var Record = require('../core/record/regular');
     var record = new Record();
 

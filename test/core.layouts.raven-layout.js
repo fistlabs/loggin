@@ -5,8 +5,8 @@
 var _ = require('lodash-node');
 var assert = require('assert');
 
-describe('core/layout/raven-layout', function () {
-    var Layout = require('../core/layout/raven-layout');
+describe('core/layouts/raven-layout', function () {
+    var Layout = require('../core/layouts/raven-layout');
     var Record = require('../core/record/regular');
 
     describe('layout.format(record)', function () {

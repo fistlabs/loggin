@@ -5,7 +5,7 @@
 var assert = require('assert');
 
 describe('core/handlers/stream-handler', function () {
-    var Layout = require('../core/layout/layout');
+    var Layout = require('../core/layouts/layout');
     var Handler = require('../core/handlers/stream-handler');
     var layout = new Layout({
         template: 'foo\n',

@@ -5,9 +5,10 @@
 var assert = require('assert');
 var util = require('util');
 
-describe('core/layout/asis-layout', function () {
-    var Layout = require('../core/layout/asis-layout');
+describe('core/layouts/asis-layout', function () {
+    var Layout = require('../core/layouts/asis-layout');
     var Record = require('../core/record/regular');
+
     var record = new Record();
 
     describe('layout.record', function () {

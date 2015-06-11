@@ -189,7 +189,7 @@ logging.conf({
         // layout instance or configuration
         spec: {
             //  Path to layout class or direct link to constructor
-            Class: 'loggin/core/layout/layout',
+            Class: 'loggin/core/layouts/layout',
             //  Link to config.records.regular, should be passed in Layout constructor as first argument
             record: 'regular',
             //  layout-specific arguments, will be passed to Layout constructor as second argument

@@ -3,10 +3,9 @@
 'use strict';
 
 var assert = require('assert');
-// var util = require('util');
 
-describe('core/layout/layout', function () {
-    var Layout = require('../core/layout/layout');
+describe('core/layouts/layout', function () {
+    var Layout = require('../core/layouts/layout');
     var Record = require('../core/record/regular');
     var record = new Record();
 

@@ -5,7 +5,7 @@
 var assert = require('assert');
 
 describe('core/logging', function () {
-    var Layout = require('../core/layout/layout');
+    var Layout = require('../core/layouts/layout');
     var Logger = require('../core/logger');
     var Handler = /** @type Handler */ require('../core/handlers/stream-handler');
     var StdLogging = /** @type Logging */ require('../core/logging');
@@ -194,7 +194,7 @@ describe('core/logging', function () {
             logging.conf({
                 layouts: {
                     foo: {
-                        Class: './layout/layout',
+                        Class: './layouts/layout',
                         record: 'r',
                         kwargs: {
                             template: 'foox'

@@ -4,8 +4,8 @@
 
 var assert = require('assert');
 
-describe('core/layout/colored', function () {
-    var Colored = require('../core/layout/colored');
+describe('core/layouts/colored', function () {
+    var Colored = require('../core/layouts/colored');
     var Record = require('../core/record/regular');
     var record = new Record();
     var duck = require('../core/util/duck');

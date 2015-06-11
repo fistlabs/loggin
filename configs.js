@@ -64,7 +64,7 @@ module.exports = {
     },
     layouts: {
         cleanRegular: {
-            Class: resolve('./core/layout/layout'),
+            Class: resolve('./core/layouts/layout'),
             record: 'regular',
             kwargs: {
                 dateFormat: '%d/%b/%Y:%H:%M:%S %z',
@@ -73,7 +73,7 @@ module.exports = {
             }
         },
         cleanVerbose: {
-            Class: resolve('./core/layout/layout'),
+            Class: resolve('./core/layouts/layout'),
             record: 'verbose',
             kwargs: {
                 showStackTraces: true,
@@ -83,7 +83,7 @@ module.exports = {
             }
         },
         colorRegular: {
-            Class: resolve('./core/layout/colored'),
+            Class: resolve('./core/layouts/colored'),
             record: 'regular',
             kwargs: {
                 dateFormat: '%H:%M:%S.%L',
@@ -92,7 +92,7 @@ module.exports = {
             }
         },
         colorVerbose: {
-            Class: resolve('./core/layout/colored'),
+            Class: resolve('./core/layouts/colored'),
             record: 'verbose',
             kwargs: {
                 showStackTraces: true,
