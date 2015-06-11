@@ -32,7 +32,7 @@ Every data you log turns to ```record``` object, then that will be formatted wit
 Handler is an object that have a behaviour to store data somewhere. It can be just stdout or file, even database.
 The function of ```handler``` - just store log messages. Handler storing place can require some data type or format, therefore handler have ```layout```.
 
-Layout is an object that takes some structure, describing the log message and turns it to ```handler``` required format. Also ```layout``` can manage just message representaion. The same types of handlers can have different layouts. Totally, ```layout``` is a micro templating system. Layout template can require some data format. Because of that ```layout``` have own ```record``` factory.
+Layout is an object that takes some structure, describing the log message and turns it to ```handler``` required format. Also ```layout``` can manage just message representation. The same types of handlers can have different layouts. Totally, ```layout``` is a micro templating system. Layout template can require some data format. Because of that ```layout``` have own ```record``` factory.
 
 Record factory is special object that takes incoming data like caller, arguments passed to caller, log level, logging context, etc. that constructs a log message model for ```layout```.
 
@@ -154,7 +154,7 @@ logging.conf({
         // handler instance or descriptor
         console: {
             //  path to handler class or direct link to class
-            Class: 'loggin/core/handler/stream-handler',
+            Class: 'loggin/core/handlers/stream-handler',
             //  Link to handler's layout, layout instance will be passed to handler constructor as first argument
             layout: 'colorVerbose',
             //  handlers keyword arguments, will be passed to handler constructor as second argument
@@ -244,7 +244,7 @@ logging.conf({
     enabled: ['foo', 'bar']
     handlers: {
         foo: {
-            Class: 'loggin/core/stream-handler',
+            Class: 'loggin/core/handlers/stream-handler',
             layout: 'colorRegular',
             kwargs: {
                 maxLevel: 'LOG',
@@ -252,7 +252,7 @@ logging.conf({
             }
         },
         bar: {
-            Class: 'loggin/core/stream-handler',
+            Class: 'loggin/core/handlers/stream-handler',
             layout: 'colorVerbose',
             kwargs: {
                 minLevel: 'WARNING',

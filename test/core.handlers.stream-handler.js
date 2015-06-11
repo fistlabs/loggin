@@ -4,9 +4,9 @@
 
 var assert = require('assert');
 
-describe('core/handler/stream-handler', function () {
+describe('core/handlers/stream-handler', function () {
     var Layout = require('../core/layout/layout');
-    var Handler = require('../core/handler/stream-handler');
+    var Handler = require('../core/handlers/stream-handler');
     var layout = new Layout({
         template: 'foo\n',
         dateFormat: 'bar'

@@ -4,8 +4,8 @@
 
 var assert = require('assert');
 
-describe('core/handler/null-handler', function () {
-    var NullHandler = require('../core/handler/null-handler');
+describe('core/handlers/null-handler', function () {
+    var NullHandler = require('../core/handlers/null-handler');
     var layout = {};
 
     describe('handler.layout', function () {

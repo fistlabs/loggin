@@ -5,8 +5,8 @@
 var assert = require('assert');
 var raven = require('raven');
 
-describe('core/handler/sentry-handler', function () {
-    var Handler = require('../core/handler/sentry-handler');
+describe('core/handlers/sentry-handler', function () {
+    var Handler = require('../core/handlers/sentry-handler');
     var layout = {};
 
     function SpyHandler(l, params) {

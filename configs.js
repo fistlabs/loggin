@@ -8,7 +8,7 @@ module.exports = {
     handlers: {
         //  development regular logs
         stdoutColorRegular: {
-            Class: resolve('./core/handler/stream-handler'),
+            Class: resolve('./core/handlers/stream-handler'),
             layout: 'colorRegular',
             kwargs: {
                 maxLevel: 'LOG',
@@ -17,7 +17,7 @@ module.exports = {
         },
         // development warnings
         stderrColorRegular: {
-            Class: resolve('./core/handler/stream-handler'),
+            Class: resolve('./core/handlers/stream-handler'),
             layout: 'colorRegular',
             kwargs: {
                 minLevel: 'WARNING',
@@ -27,7 +27,7 @@ module.exports = {
         },
         //  development errors
         stderrColorVerbose: {
-            Class: resolve('./core/handler/stream-handler'),
+            Class: resolve('./core/handlers/stream-handler'),
             layout: 'colorVerbose',
             kwargs: {
                 minLevel: 'ERROR',
@@ -36,7 +36,7 @@ module.exports = {
         },
         //  production regular log
         stdoutCleanRegular: {
-            Class: resolve('./core/handler/stream-handler'),
+            Class: resolve('./core/handlers/stream-handler'),
             layout: 'cleanRegular',
             kwargs: {
                 stream: process.stdout
@@ -44,7 +44,7 @@ module.exports = {
         },
         // production warnings
         stderrCleanRegular: {
-            Class: resolve('./core/handler/stream-handler'),
+            Class: resolve('./core/handlers/stream-handler'),
             layout: 'cleanRegular',
             kwargs: {
                 minLevel: 'WARNING',
@@ -54,7 +54,7 @@ module.exports = {
         },
         //  production errors
         stderrCleanVerbose: {
-            Class: resolve('./core/handler/stream-handler'),
+            Class: resolve('./core/handlers/stream-handler'),
             layout: 'cleanVerbose',
             kwargs: {
                 minLevel: 'ERROR',

@@ -7,7 +7,7 @@ var assert = require('assert');
 describe('core/logging', function () {
     var Layout = require('../core/layout/layout');
     var Logger = require('../core/logger');
-    var Handler = /** @type Handler */ require('../core/handler/stream-handler');
+    var Handler = /** @type Handler */ require('../core/handlers/stream-handler');
     var StdLogging = /** @type Logging */ require('../core/logging');
 
     function Logging() {
@@ -257,7 +257,7 @@ describe('core/logging', function () {
                 },
                 handlers: {
                     bar: {
-                        Class: './handler/stream-handler',
+                        Class: './handlers/stream-handler',
                         layout: 'foo'
                     }
                 }
