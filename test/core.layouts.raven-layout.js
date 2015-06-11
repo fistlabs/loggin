@@ -7,7 +7,7 @@ var assert = require('assert');
 
 describe('core/layouts/raven-layout', function () {
     var Layout = require('../core/layouts/raven-layout');
-    var Record = require('../core/record/regular');
+    var Record = require('../core/records/regular');
 
     describe('layout.format(record)', function () {
         it('Should update record.message if the message is not an error', function () {

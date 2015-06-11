@@ -6,7 +6,7 @@ var assert = require('assert');
 
 describe('core/layouts/layout', function () {
     var Layout = require('../core/layouts/layout');
-    var Record = require('../core/record/regular');
+    var Record = require('../core/records/regular');
     var record = new Record();
 
     describe('layout.format(record)', function () {

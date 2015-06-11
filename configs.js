@@ -105,11 +105,11 @@ module.exports = {
     records: {
         //  regular record
         regular: {
-            Class: resolve('./core/record/regular')
+            Class: resolve('./core/records/regular')
         },
         //  regular record + context data
         verbose: {
-            Class: resolve('./core/record/verbose')
+            Class: resolve('./core/records/verbose')
         }
     }
 };

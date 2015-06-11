@@ -7,7 +7,7 @@ var util = require('util');
 
 describe('core/layouts/strf-layout', function () {
     var Layout = require('../core/layouts/strf-layout');
-    var Record = require('../core/record/regular');
+    var Record = require('../core/records/regular');
     var record = new Record();
 
     describe('layout.template', function () {

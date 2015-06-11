@@ -7,8 +7,8 @@ var path = require('path');
 var filename = require('../core/util/main');
 var dirname = path.dirname(filename);
 
-describe('core/record/context', function () {
-    var Record = require('../core/record/verbose');
+describe('core/records/verbose', function () {
+    var Record = require('../core/records/verbose');
     var record = new Record();
 
     describe('record.create()', function () {

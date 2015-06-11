@@ -4,8 +4,8 @@
 
 var assert = require('assert');
 
-describe('core/record/regular', function () {
-    var Record = require('../core/record/regular');
+describe('core/records/regular', function () {
+    var Record = require('../core/records/regular');
     var record = new Record();
 
     describe('record.create()', function () {
