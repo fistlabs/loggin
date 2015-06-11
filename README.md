@@ -293,8 +293,10 @@ Configuration like this let you to write ```LOG``` and less records to stdout an
 
 ###Handlers
 * ```stdoutColorRegular``` - writes colored compact entries which level less then ```WARNING``` to standard output (dev)
+* ```stderrColorRegular``` - writes colored compact entries which level is ```WARNING``` to standard error output (dev)
 * ```stderrColorVerbose``` - writes colored verbose entries which level higher then ```LOG``` to standard error output (dev)
 * ```stdoutCleanRegular``` - writes all the entries to standard output in pretty compact layout (prod)
+* ```stderrCleanRegular``` - writes `WARNING` entries to standard error output in pretty compact layout (prod)
 * ```stderrCleanVerbose``` - writes ```WARNING``` and higher entries to standard error output in super verbose layout (prod)
 
 ###Default setup
