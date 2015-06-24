@@ -1,6 +1,7 @@
 'use strict';
 
 var EOL = require('os').EOL;
+var util = require('util');
 
 var StrfLayout = /** @type StrfLayout*/ require('./strf-layout');
 
@@ -58,7 +59,7 @@ Layout.prototype.constructor = Layout;
  *
  * @param {Object} record
  *
- * @returns {String}
+ * @returns {*}
  * */
 Layout.prototype._formatRecord = function (record) {
     var i;
@@ -68,7 +69,7 @@ Layout.prototype._formatRecord = function (record) {
 
     for (i = 0, l = message.length; i < l; i += 1) {
         record.message = message[i];
-        results[i] = strf.formatSign([this.template, record]);
+        results[i] = strf.formatSign([this.template, record], util.inspect);
     }
 
     return results.join('');
