@@ -2,7 +2,7 @@
 
 var NullHandler = /** @type NullHandler */ require('./null-handler');
 
-var raven = require('raven');
+var raven = require('@sentry/minimal');
 
 var levelMap = {
     INTERNAL: 'debug',

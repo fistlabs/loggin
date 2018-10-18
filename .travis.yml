@@ -3,7 +3,7 @@ os:
   - osx
 language: node_js
 node_js:
-  - "0.10"
-  - "0.12"
-  - "iojs"
-script: "node_modules/.bin/gulp test"
+  - "6"
+  - "8"
+  - "10"
+script: "npm run test && npm run lint"

@@ -3,7 +3,7 @@
 'use strict';
 
 var assert = require('assert');
-var raven = require('raven');
+var raven = require('@sentry/minimal');
 
 describe('core/handlers/sentry-handler', function () {
     var Handler = require('../core/handlers/sentry-handler');

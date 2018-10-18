@@ -2,7 +2,7 @@
 /*global describe, it*/
 'use strict';
 
-var _ = require('lodash-node');
+var _ = require('lodash');
 var assert = require('assert');
 
 describe('core/layouts/raven-layout', function () {
