@@ -2,7 +2,7 @@
 
 var NullHandler = /** @type NullHandler */ require('./null-handler');
 
-var raven = require('@sentry/minimal');
+var sentry = require('@sentry/minimal');
 
 var levelMap = {
     INTERNAL: 'debug',
@@ -44,7 +44,7 @@ function SentryHandler(layout, params) {
      * @property
      * @type {raven.Client}
      * */
-    this.client = this._createClient(params.dsn, params.options);
+    this.client = sentry;
 }
 
 SentryHandler.prototype = Object.create(NullHandler.prototype);
@@ -56,20 +56,6 @@ SentryHandler.prototype = Object.create(NullHandler.prototype);
  * @constructs
  * */
 SentryHandler.prototype.constructor = SentryHandler;
-
-/**
- * @protected
- * @memberOf {SentryHandler}
- * @method
- *
- * @param {String} dsn
- * @param {Object} [options]
- *
- * @returns {Object}
- * */
-SentryHandler.prototype._createClient = function (dsn, options) {
-    return new raven.Client(dsn, options);
-};
 
 /**
  * @public
