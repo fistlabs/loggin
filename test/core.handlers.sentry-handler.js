@@ -3,7 +3,6 @@
 'use strict';
 
 var assert = require('assert');
-var raven = require('raven');
 
 describe('core/handlers/sentry-handler', function () {
     var Handler = require('../core/handlers/sentry-handler');
@@ -28,9 +27,8 @@ describe('core/handlers/sentry-handler', function () {
     }
 
     describe('handler.client', function () {
-        it('Should create raven client', function () {
+        it('Should create client', function () {
             var handler = new Handler(layout, {});
-            assert.ok(handler.client instanceof raven.Client);
         });
 
         it('Should create client', function () {

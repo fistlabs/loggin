@@ -1,6 +1,6 @@
 'use strict';
 
-var _ = require('lodash-node');
+var _ = require('lodash');
 
 exports.isRecord = function (obj) {
     return _.isObject(obj) && _.isFunction(obj.create);

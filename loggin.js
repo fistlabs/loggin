@@ -4,7 +4,7 @@ var S_DEFAULT_NAME = 'default';
 
 var Logging = require('./core/logging');
 
-var _ = require('lodash-node');
+var _ = require('lodash');
 var configs = require('./configs');
 var loggings = {};
 var logging = getLogger();

@@ -15,7 +15,7 @@ var LEVELS = [
 var Logger = /** @type Logger */ require('./logger');
 var errors = require('./errors');
 
-var _ = require('lodash-node');
+var _ = require('lodash');
 var duck = require('./util/duck');
 
 /**
@@ -79,6 +79,7 @@ function Logging(name) {
      * @type {Object}
      * */
     this.enabledLevels = {};
+    const self = this;
 
     Object.defineProperty(this, 'logLevel', {
         get: function () {
@@ -88,7 +89,7 @@ function Logging(name) {
         set: function (level) {
             logLevel = level;
             _.forOwn(this.levels, function (value, levelName) {
-                this.enabledLevels[levelName] = value >= this.levels[this.logLevel];
+                self.enabledLevels[levelName] = value >= self.levels[self.logLevel];
             }, this);
         }
     });
@@ -138,8 +139,9 @@ Logging.prototype.conf = function (configs) {
         }
     }
 
+    const self = this;
     _.forEach(this.configs.enabled, function (handler) {
-        if (!duck.isHandler(this.handlers[handler])) {
+        if (!duck.isHandler(self.handlers[handler])) {
             throw new errors.LogginConfError('No such handler ' + handler);
         }
     }, this);
@@ -248,6 +250,7 @@ Logging.prototype._createRecords = function (records) {
  * @returns {Object}
  * */
 Logging.prototype._createLayouts = function (layouts) {
+    const self = this;
     return _.mapValues(layouts, function (config) {
         var LayoutClass;
         var record;
@@ -270,7 +273,7 @@ Logging.prototype._createLayouts = function (layouts) {
             throw new errors.LogginConfError('layout.Class must specify constructor');
         }
 
-        record = this.records[config.record];
+        record = self.records[config.record];
 
         if (!duck.isRecord(record)) {
             throw new errors.LogginConfError('No such record instance ' + config.record);
@@ -296,6 +299,7 @@ Logging.prototype._createLayouts = function (layouts) {
  * @returns {Object}
  * */
 Logging.prototype._createHandlers = function (handlers) {
+    const self = this;
     return _.mapValues(handlers, function (config) {
         var HandlerClass;
         var layout;
@@ -318,7 +322,7 @@ Logging.prototype._createHandlers = function (handlers) {
             throw new errors.LogginConfError('handler.Class must specify constructor');
         }
 
-        layout = this.layouts[config.layout];
+        layout = self.layouts[config.layout];
 
         if (!duck.isLayout(layout)) {
             throw new errors.LogginConfError('No such layout instance ' + config.layout);

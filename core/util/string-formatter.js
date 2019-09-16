@@ -1,5 +1,7 @@
 'use strict';
 
+/* eslint-disable complexity */
+
 /*jscs: disable*/
 var R_TOKENS = /^(?:%(?:\(((?:[^()]+|"[^"]*"|'[^']*')+)\))?([+-])?(?:(?:([\s\S]):)?(\d+))?(?:\.(\d+))?([a-z])|([^%]+)|%?(%))/;
 /*jscs: enable*/

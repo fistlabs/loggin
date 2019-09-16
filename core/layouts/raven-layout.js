@@ -2,7 +2,7 @@
 
 var AsisLayout = /** @type AsisLayout */ require('./asis-layout');
 
-var _ = require('lodash-node');
+var _ = require('lodash');
 
 /**
  * @class RavenLayout
