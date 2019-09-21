@@ -28,10 +28,6 @@ describe('core/handlers/sentry-handler', function () {
 
     describe('handler.client', function () {
         it('Should create client', function () {
-            var handler = new Handler(layout, {});
-        });
-
-        it('Should create client', function () {
             var handler = createHandler({});
             assert.ok(handler.client);
         });
